@@ -13,18 +13,18 @@ import java.util.NoSuchElementException;
  */
 public class SimpleArray<T> implements Iterable<T> {
     private T[] arr;
-    private int arrSize;
-    private int currentIndex;
+    private int size;
+    private int index;
 
     /**
      * Constructor
      *
-     * @param arrSize Size of array.
+     * @param size Size of array.
      */
-    public SimpleArray(int arrSize) {
-        this.currentIndex = 0;
-        this.arr = (T[]) new Object[arrSize];
-        this.arrSize = arr.length;
+    public SimpleArray(int size) {
+        this.index = 0;
+        this.arr = (T[]) new Object[size];
+        this.size = arr.length;
     }
 
     /**
@@ -33,53 +33,50 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model Model to add.
      */
     public void add(T model) {
-        if (currentIndex < arrSize) {
-            arr[currentIndex] = model;
-            currentIndex++;
+        if (index < size) {
+            arr[index] = model;
+            index++;
         }
     }
 
     /**
-     * Sets element at index.
+     * Sets element at ind.
      *
-     * @param index Index to add to.
+     * @param ind   Index to add to.
      * @param model Model to set.
      */
-    public void set(int index, T model) {
-        if (index < arrSize && index < currentIndex - 1) {
-            arr[index] = model;
-        } else {
+    public void set(int ind, T model) {
+        if (ind >= size || ind >= index - 1) {
             throw new ArrayStoreException();
         }
+        arr[ind] = model;
     }
 
     /**
      * Removes element from array and moves rest elements to the left.
      *
-     * @param index Index of deleting element.
+     * @param ind Index of deleting element.
      */
-    public void remove(int index) {
-        if (index < arrSize && index < currentIndex - 1) {
-            arr[index] = null;
-            System.arraycopy(arr, index + 1, arr, index, currentIndex - index + 1);
-            currentIndex--;
-        } else {
+    public void remove(int ind) {
+        if (ind >= size || ind >= index - 1) {
             throw new ArrayStoreException();
         }
+        arr[ind] = null;
+        System.arraycopy(arr, ind + 1, arr, ind, index - ind + 1);
+        index--;
     }
 
     /**
-     * Returns element by index.
+     * Returns element by ind.
      *
-     * @param index Index of returning element.
+     * @param ind Index of returning element.
      * @return T element.
      */
-    public T get(int index) {
-        if (index < currentIndex && index < arrSize) {
-            return arr[index];
-        } else {
-            throw new NoSuchElementException();
+    public T get(int ind) {
+        if (ind < index && ind < size) {
+            return arr[ind];
         }
+        throw new NoSuchElementException();
     }
 
     /**
@@ -89,7 +86,7 @@ public class SimpleArray<T> implements Iterable<T> {
      */
     @Override
     public String toString() {
-        return Arrays.toString(Arrays.copyOfRange(arr, 0, currentIndex));
+        return Arrays.toString(Arrays.copyOfRange(arr, 0, index));
     }
 
     /**
@@ -129,7 +126,7 @@ public class SimpleArray<T> implements Iterable<T> {
          */
         @Override
         public boolean hasNext() {
-            return index < array.length && index < currentIndex;
+            return index < array.length && index < SimpleArray.this.index;
         }
 
         /**
