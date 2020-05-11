@@ -3,6 +3,7 @@ package ru.job4j.generics;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * SimpleArray.
@@ -46,9 +47,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model Model to set.
      */
     public void set(int ind, T model) {
-        if (ind >= size || ind >= index - 1) {
-            throw new ArrayStoreException();
-        }
+        Objects.checkIndex(ind, index);
         arr[ind] = model;
     }
 
@@ -58,9 +57,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param ind Index of deleting element.
      */
     public void remove(int ind) {
-        if (ind >= size || ind >= index - 1) {
-            throw new ArrayStoreException();
-        }
+        Objects.checkIndex(ind, index);
         arr[ind] = null;
         System.arraycopy(arr, ind + 1, arr, ind, index - ind + 1);
         index--;
@@ -73,10 +70,8 @@ public class SimpleArray<T> implements Iterable<T> {
      * @return T element.
      */
     public T get(int ind) {
-        if (ind < index && ind < size) {
-            return arr[ind];
-        }
-        throw new NoSuchElementException();
+        Objects.checkIndex(ind, index);
+        return arr[ind];
     }
 
     /**
@@ -126,7 +121,7 @@ public class SimpleArray<T> implements Iterable<T> {
          */
         @Override
         public boolean hasNext() {
-            return index < array.length && index < SimpleArray.this.index;
+            return index < SimpleArray.this.index;
         }
 
         /**

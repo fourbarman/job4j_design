@@ -69,7 +69,7 @@ public class SimpleArrayTest {
     /**
      * Test get when no elements in array than throw NoSuchElementException.
      */
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void whenHasNoElementsThanThrowNoSuchElementException() {
         simpleArray.get(0);
     }
@@ -94,7 +94,7 @@ public class SimpleArrayTest {
     /**
      * Test when set new element to empty array than throw ArrayStoreException.
      */
-    @Test(expected = ArrayStoreException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void whenSetElementToEmptyArray() {
         simpleArray.set(0, 1);
     }
@@ -116,7 +116,7 @@ public class SimpleArrayTest {
     /**
      * Test when set new element out of index than throw ArrayStoreException.
      */
-    @Test(expected = ArrayStoreException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void whenSetElementWithIndexMoreArrayHasElementsThanArrayStoreException() {
         simpleArray.add(1);
         simpleArray.add(2);
@@ -129,7 +129,7 @@ public class SimpleArrayTest {
     /**
      * Test when remove element from empty array than throw ArrayStoreException.
      */
-    @Test(expected = ArrayStoreException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void whenRemoveFromEmptyArrayThanArrayStoreException() {
         simpleArray.remove(0);
     }
