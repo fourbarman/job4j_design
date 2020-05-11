@@ -1,6 +1,6 @@
 package ru.job4j.iterator;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -20,7 +20,7 @@ public class Converter {
      */
     Iterator<Integer> convert(Iterator<Iterator<Integer>> it) {
         return new Iterator<Integer>() {
-            private Iterator<Integer> iterator = (new ArrayList<Integer>()).iterator();
+            private Iterator<Integer> iterator = Collections.emptyIterator();
 
             /**
              * Checks if iterator has next element.
