@@ -65,7 +65,11 @@ public final class MemStore<T extends Base> implements Store<T> {
      */
     @Override
     public T findById(String id) {
-        return this.mem.get(indexOf(id));
+        int index = indexOf(id);
+        if (index != -1) {
+            return this.mem.get(indexOf(id));
+        }
+        return null;
     }
 
     /**
