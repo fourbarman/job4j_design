@@ -33,15 +33,12 @@ public final class MemStore<T extends Base> implements Store<T> {
      */
     @Override
     public boolean replace(String id, T model) {
-        boolean result = false;
-        for (T t : this.mem
-        ) {
-            if (t != null && t.getId().equals(id)) {
-                this.mem.set(this.mem.indexOf(t), model);
-                result = true;
-            }
+        int index = indexOf(id);
+        if (index != -1) {
+            this.mem.set(index, model);
+            return true;
         }
-        return result;
+        return false;
     }
 
     /**
@@ -52,7 +49,12 @@ public final class MemStore<T extends Base> implements Store<T> {
      */
     @Override
     public boolean delete(String id) {
-        return this.mem.removeIf(x -> x.getId().equals(id));
+        int index = indexOf(id);
+        if (index != -1) {
+            this.mem.remove(indexOf(id));
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -63,9 +65,21 @@ public final class MemStore<T extends Base> implements Store<T> {
      */
     @Override
     public T findById(String id) {
-        return this.mem.stream()
-                .filter(x -> x.getId().equals(id))
-                .findAny()
-                .orElse(null);
+        return this.mem.get(indexOf(id));
+    }
+
+    /**
+     * Returns index of element by id or -1 if not found.
+     *
+     * @param id Id of the element.
+     * @return int Index.
+     */
+    private int indexOf(String id) {
+        for (T t : this.mem) {
+            if (t.getId().equals(id)) {
+                return this.mem.indexOf(t);
+            }
+        }
+        return -1;
     }
 }
