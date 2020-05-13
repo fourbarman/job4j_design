@@ -14,7 +14,6 @@ import java.util.Objects;
  */
 public class SimpleArray<T> implements Iterable<T> {
     private T[] arr;
-    private int size;
     private int index;
 
     /**
@@ -25,7 +24,6 @@ public class SimpleArray<T> implements Iterable<T> {
     public SimpleArray(int size) {
         this.index = 0;
         this.arr = (T[]) new Object[size];
-        this.size = arr.length;
     }
 
     /**
@@ -34,7 +32,7 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model Model to add.
      */
     public void add(T model) {
-        if (index < size) {
+        if (index < arr.length) {
             arr[index] = model;
             index++;
         }
