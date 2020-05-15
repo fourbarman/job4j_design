@@ -36,16 +36,12 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param model Model to add.
      */
     public void add(T model) {
-        if (index < container.length) {
-            this.container[index] = model;
-            index++;
-            modCount++;
-        } else {
+        if (index >= container.length) {
             increaseSize();
-            this.container[index] = model;
-            index++;
-            modCount++;
         }
+        this.container[index] = model;
+        index++;
+        modCount++;
     }
 
     /**
