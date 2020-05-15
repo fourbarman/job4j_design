@@ -87,4 +87,34 @@ public class SimpleLinkedListTest {
         sll.add("second");
         it.next();
     }
+    /**
+     * Test when delete first is only element than throw NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenDeleteFirst() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        sll.deleteFirst();
+        sll.iterator().next();
+    }
+    /**
+     * Test when delete first element in empty list than throw NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenDeleteEmptyLinked() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.deleteFirst();
+    }
+    /**
+     * Test when delete first element than next becomes first.
+     */
+    @Test
+    public void whenMultiDelete() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        sll.add(2);
+        sll.deleteFirst();
+        Iterator<Integer> it = sll.iterator();
+        assertThat(it.next(), is(2));
+    }
 }

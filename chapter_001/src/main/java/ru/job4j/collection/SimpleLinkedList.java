@@ -69,6 +69,19 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     }
 
     /**
+     * Removes first element from the list.
+     */
+    @SuppressWarnings("unchecked")
+    public void deleteFirst() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        head = head.next;
+        size--;
+        modCount++;
+    }
+
+    /**
      * iterator.
      *
      * @return T Iterator.
