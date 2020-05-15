@@ -16,6 +16,7 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     private Node<T> head;
     private int size = 0;
     private int modCount = 0;
+
     /**
      * Returns head of the list.
      *
@@ -27,6 +28,7 @@ public class SimpleLinkedList<T> implements Iterable<T> {
         }
         return head;
     }
+
     /**
      * Returns last element of the list.
      *
@@ -44,7 +46,11 @@ public class SimpleLinkedList<T> implements Iterable<T> {
         return tail;
     }
 
-
+    /**
+     * Adds new value to the list.
+     *
+     * @param value T Value to add.
+     */
 
     @SuppressWarnings("unchecked")
     public void add(T value) {
@@ -74,13 +80,10 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     public T get(int index) {
         Objects.checkIndex(index, this.getSize());
         Node<T> node = head;
-        for (int i = 0; i < size; i++) {
-            if (i == index) {
-                return node.data;
-            }
+        for (int i = 0; i != index; i++) {
             node = node.next;
         }
-        return null;
+        return node.data;
     }
 
     /**
@@ -104,6 +107,7 @@ public class SimpleLinkedList<T> implements Iterable<T> {
         size--;
         modCount++;
     }
+
     /**
      * Removes last element from the list.
      */
