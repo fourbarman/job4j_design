@@ -16,12 +16,36 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     private Node<T> head;
     private int size = 0;
     private int modCount = 0;
-
     /**
-     * Adds element to the end of the list.
+     * Returns head of the list.
      *
-     * @param value Value to add.
+     * @return Node T Head.
      */
+    public Node<T> getFirst() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        return head;
+    }
+    /**
+     * Returns last element of the list.
+     *
+     * @return Node T Last element.
+     */
+    @SuppressWarnings("unchecked")
+    public Node<T> getLast() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        Node<T> tail = head;
+        while (tail.next != null) {
+            tail = tail.next;
+        }
+        return tail;
+    }
+
+
+
     @SuppressWarnings("unchecked")
     public void add(T value) {
         Node<T> node = new Node<>(value, null);
@@ -41,10 +65,10 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     }
 
     /**
-     * Returns element by index.
+     * Returns element data by index.
      *
-     * @param index Index of returning element.
-     * @return T element.
+     * @param index Index of returning element data.
+     * @return T data element.
      */
     @SuppressWarnings("unchecked")
     public T get(int index) {
@@ -77,6 +101,24 @@ public class SimpleLinkedList<T> implements Iterable<T> {
             throw new NoSuchElementException();
         }
         head = head.next;
+        size--;
+        modCount++;
+    }
+    /**
+     * Removes last element from the list.
+     */
+    @SuppressWarnings("unchecked")
+    public void deleteLast() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        Node<T> tail = head;
+        Node<T> previous = head;
+        while (tail.next != null) {
+            previous = tail;
+            tail = head.next;
+        }
+        previous.next = null;
         size--;
         modCount++;
     }

@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+
 /**
  * Test.
  *
@@ -87,6 +88,7 @@ public class SimpleLinkedListTest {
         sll.add("second");
         it.next();
     }
+
     /**
      * Test when delete first is only element than throw NoSuchElementException.
      */
@@ -97,6 +99,7 @@ public class SimpleLinkedListTest {
         sll.deleteFirst();
         sll.iterator().next();
     }
+
     /**
      * Test when delete first element in empty list than throw NoSuchElementException.
      */
@@ -105,6 +108,7 @@ public class SimpleLinkedListTest {
         SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
         sll.deleteFirst();
     }
+
     /**
      * Test when delete first element than next becomes first.
      */
@@ -116,5 +120,69 @@ public class SimpleLinkedListTest {
         sll.deleteFirst();
         Iterator<Integer> it = sll.iterator();
         assertThat(it.next(), is(2));
+    }
+
+    /**
+     * Test when delete last, than iterator hasNext is false.
+     */
+    @Test
+    public void whenLastDelete() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        sll.add(2);
+        sll.deleteLast();
+        Iterator<Integer> it = sll.iterator();
+        it.next();
+        assertThat(it.hasNext(), is(false));
+    }
+
+    /**
+     * Test when get first element from empty list than throws NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenGetFirstFromEmpty() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.getFirst();
+    }
+
+    /**
+     * Test when get first element than return first element.
+     */
+    @Test
+    public void whenGetFirst() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        sll.add(2);
+        assertThat(sll.getFirst().data, is(1));
+    }
+
+    /**
+     * Test when get last element from empty list than throws NoSuchElementException.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenGetLastFromEmpty() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.getLast();
+    }
+
+    /**
+     * Test when get last element from list than return last element.
+     */
+    @Test
+    public void whenGetLastWhenHasOne() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        assertThat(sll.getLast().data, is(1));
+    }
+
+    /**
+     * Test when get last element from list than return last element.
+     */
+    @Test
+    public void whenGetLast() {
+        SimpleLinkedList<Integer> sll = new SimpleLinkedList<>();
+        sll.add(1);
+        sll.add(2);
+        assertThat(sll.getLast().data, is(2));
     }
 }
