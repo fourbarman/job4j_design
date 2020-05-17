@@ -29,4 +29,13 @@ public class SimpleStack<T> {
     public void push(T value) {
         this.linked.add(value);
     }
+
+    /**
+     * Return size of stack.
+     *
+     * @return size.
+     */
+    public int getSize() {
+        return linked.getSize();
+    }
 }
