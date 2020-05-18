@@ -23,7 +23,6 @@ public class SimpleArray<T> implements Iterable<T> {
      * @param ind Index of returning element.
      * @return T element.
      */
-    @SuppressWarnings("unchecked")
     public T get(int ind) {
         Objects.checkIndex(ind, index);
         return (T) container[ind];
@@ -58,7 +57,6 @@ public class SimpleArray<T> implements Iterable<T> {
      *
      * @return T Iterator.
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Iterator<T> iterator() {
         return new SimpleIterator<T>((T[]) container);

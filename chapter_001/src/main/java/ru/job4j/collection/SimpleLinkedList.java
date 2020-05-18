@@ -34,7 +34,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
      *
      * @return Node T Last element.
      */
-    @SuppressWarnings("unchecked")
     public Node<T> getLast() {
         if (head == null) {
             throw new NoSuchElementException();
@@ -51,8 +50,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
      *
      * @param value T Value to add.
      */
-
-    @SuppressWarnings("unchecked")
     public void add(T value) {
         Node<T> node = new Node<>(value, null);
         if (head == null) {
@@ -76,7 +73,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
      * @param index Index of returning element data.
      * @return T data element.
      */
-    @SuppressWarnings("unchecked")
     public T get(int index) {
         Objects.checkIndex(index, this.getSize());
         Node<T> node = head;
@@ -98,7 +94,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     /**
      * Removes first element from the list.
      */
-    @SuppressWarnings("unchecked")
     public void deleteFirst() {
         if (head == null) {
             throw new NoSuchElementException();
@@ -111,7 +106,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     /**
      * Removes last element from the list.
      */
-    @SuppressWarnings("unchecked")
     public void deleteLast() {
         if (head == null) {
             throw new NoSuchElementException();
@@ -130,7 +124,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     /**
      * Reverts list elements.
      */
-    @SuppressWarnings("unchecked")
     public void revert() {
         Node<T> previousNode = null;
         Node<T> currentNode = head;
@@ -196,7 +189,6 @@ public class SimpleLinkedList<T> implements Iterable<T> {
          *
          * @return E.
          */
-        @SuppressWarnings("unchecked")
         @Override
         public E next() {
             if (!hasNext()) {
