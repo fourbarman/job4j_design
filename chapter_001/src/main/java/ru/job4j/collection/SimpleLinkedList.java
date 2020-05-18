@@ -128,6 +128,25 @@ public class SimpleLinkedList<T> implements Iterable<T> {
     }
 
     /**
+     * Reverts list elements.
+     */
+    @SuppressWarnings("unchecked")
+    public void revert() {
+        Node<T> previousNode = null;
+        Node<T> currentNode = head;
+        Node<T> nextNode = head.next;
+        while (nextNode != null) {
+            currentNode.next = previousNode;
+            previousNode = currentNode;
+            currentNode = nextNode;
+            nextNode = nextNode.next;
+        }
+        currentNode.next = previousNode;
+        head = currentNode;
+
+    }
+
+    /**
      * iterator.
      *
      * @return T Iterator.

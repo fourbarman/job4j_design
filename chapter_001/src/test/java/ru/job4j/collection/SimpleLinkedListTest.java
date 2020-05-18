@@ -185,4 +185,31 @@ public class SimpleLinkedListTest {
         sll.add(2);
         assertThat(sll.getLast().data, is(2));
     }
+
+    /**
+     * Test when add than iterate.
+     */
+    @Test
+    public void whenAddThenIter() {
+        SimpleLinkedList<Integer> linked = new SimpleLinkedList<>();
+        linked.add(1);
+        linked.add(2);
+        Iterator<Integer> it = linked.iterator();
+        assertThat(it.next(), is(1));
+        assertThat(it.next(), is(2));
+    }
+
+    /**
+     * Test when add than revert and get reverted list.
+     */
+    @Test
+    public void whenAddAndRevertThenIter() {
+        SimpleLinkedList<Integer> linked = new SimpleLinkedList<>();
+        linked.add(1);
+        linked.add(2);
+        linked.revert();
+        Iterator<Integer> it = linked.iterator();
+        assertThat(it.next(), is(2));
+        assertThat(it.next(), is(1));
+    }
 }
