@@ -40,8 +40,10 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         }
         Node<K, V> node = new Node<>(key, value);
         int index = findIndex(node.key);
-        if (table[index] != null) {
-            return false;
+        if (table[index] != null && node.getHashCode() == table[index].getHashCode()) {
+            table[index].value = node.value;
+            this.modCount++;
+            return true;
         }
         this.table[index] = node;
         this.size++;
@@ -60,7 +62,10 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return null;
         }
-        return this.table[index].value;
+        if (isThatKey(this.table[index].getKey(), key)) {
+            return this.table[index].value;
+        }
+        return null;
     }
 
     /**
@@ -74,10 +79,13 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return false;
         }
-        this.table[index] = null;
-        this.size--;
-        this.modCount++;
-        return true;
+        if (isThatKey(this.table[index].getKey(), key)) {
+            this.table[index] = null;
+            this.size--;
+            this.modCount++;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -104,6 +112,18 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
      */
     private int findIndex(K key) {
         return hash(key) & (capacity - 1);
+    }
+
+    /**
+     * Returns if keys are equal.
+     *
+     * @param storageKey Key in storage.
+     * @param key        Key.
+     * @return Result.
+     */
+    public boolean isThatKey(K storageKey, K key) {
+        return key.hashCode() == storageKey.hashCode()
+                && key.equals(storageKey);
     }
 
     /**
@@ -140,7 +160,6 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
     public Iterator<Node<K, V>> iterator() {
         return new Iterator<>() {
             final Node<K, V>[] array = table;
-            final int size = getSize();
             int index = 0;
             final int currentModCount = modCount;
 
@@ -154,7 +173,10 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
                 if (currentModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
-                return index < size;
+                while (index < capacity && array[index] == null) {
+                    index++;
+                }
+                return index < capacity;
             }
 
             /**
@@ -166,9 +188,6 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
             public Node<K, V> next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
-                }
-                while (array[index] == null && index < capacity) {
-                    index++;
                 }
                 return array[index++];
             }
@@ -184,7 +203,7 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
      */
     public static class Node<G, D> {
         private final G key;
-        private final D value;
+        private D value;
 
         public int getHashCode() {
             return hashCode;

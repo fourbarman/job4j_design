@@ -3,9 +3,7 @@ package ru.job4j.collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -46,6 +44,16 @@ public class SimpleHashMapTest {
     }
 
     /**
+     * Test when when insert second object with equal key than size is the same.
+     */
+    @Test
+    public void whenInsertEqualKeysThanGetSizeIsTheSame() {
+        map.insert(1, "one");
+        map.insert(1, "another one");
+        assertThat(map.getSize(), is(1));
+    }
+
+    /**
      * Test when getSize from storage after insert 1 element and delete that element than return 0.
      */
     @Test
@@ -64,12 +72,22 @@ public class SimpleHashMapTest {
     }
 
     /**
-     * Test when insert second object with equal key than return false.
+     * Test when insert second object with equal key than return true.
      */
     @Test
     public void whenInsertEqualKeysThanFalse() {
         map.insert(1, "one");
-        assertThat(map.insert(1, "another one"), is(false));
+        assertThat(map.insert(1, "another one"), is(true));
+    }
+
+    /**
+     * Test when insert second object with equal key than storage has new value.
+     */
+    @Test
+    public void whenInsertEqualKeysThanHasNewValue() {
+        map.insert(1, "one");
+        map.insert(1, "another one");
+        assertThat(map.get(1), is("another one"));
     }
 
     /**
@@ -86,9 +104,8 @@ public class SimpleHashMapTest {
     @Test
     public void whenInsertTwoNullKeys() {
         map.insert(null, "zero");
-        assertThat(map.insert(null, "z"), is(false));
+        assertThat(map.insert(null, "z"), is(true));
     }
-    //get
 
     /**
      * Test when get from empty storage or storage has no such key than return null.
@@ -204,7 +221,7 @@ public class SimpleHashMapTest {
     @Test
     public void testResize() {
         for (int i = 1; i < 20; i++) {
-            map.insert(i, "" + i);
+            assertTrue(map.insert(i, "" + i));
         }
     }
 }
