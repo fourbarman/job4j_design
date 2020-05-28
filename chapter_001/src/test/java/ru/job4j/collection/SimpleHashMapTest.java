@@ -99,15 +99,6 @@ public class SimpleHashMapTest {
     }
 
     /**
-     * Test when insert second object with null key than return false.
-     */
-    @Test
-    public void whenInsertTwoNullKeys() {
-        map.insert(null, "zero");
-        assertThat(map.insert(null, "z"), is(true));
-    }
-
-    /**
      * Test when get from empty storage or storage has no such key than return null.
      */
     @Test
@@ -223,5 +214,50 @@ public class SimpleHashMapTest {
         for (int i = 1; i < 20; i++) {
             assertTrue(map.insert(i, "" + i));
         }
+    }
+
+    /**
+     * Test when insert returns false if hashcode equals but keys are not equals.
+     * Method equals() overrides in right manner
+     * Method hashCode() returns 31 every time.
+     * Class User for test.
+     */
+    @Test
+    public void whenInsertReturnFalse() {
+        class User {
+            int id;
+            String name;
+            GregorianCalendar birthDate;
+
+            User(int id, String name, GregorianCalendar birthDate) {
+                this.id = id;
+                this.name = name;
+                this.birthDate = birthDate;
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) {
+                    return true;
+                }
+                if (o == null || getClass() != o.getClass()) {
+                    return false;
+                }
+                User user = (User) o;
+                return id == user.id
+                        && Objects.equals(name, user.name)
+                        && Objects.equals(birthDate, user.birthDate);
+            }
+
+            @Override
+            public int hashCode() {
+                return 31;
+            }
+        }
+        SimpleHashMap<User, String> map = new SimpleHashMap<>();
+        User user1 = new User(123456789, "user1", new GregorianCalendar(1990, 12, 12));
+        User user2 = new User(1, "user2", new GregorianCalendar(1990, 12, 12));
+        map.insert(user1, "user1");
+        assertThat(map.insert(user2, "user1"), is(false));
     }
 }

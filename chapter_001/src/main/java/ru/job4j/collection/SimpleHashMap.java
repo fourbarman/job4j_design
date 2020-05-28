@@ -29,6 +29,7 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
 
     /**
      * Insert (key, value) to the table.
+     * Returns false if index and hashCode are the same, but key are not equal.
      *
      * @param key   Key.
      * @param value Value.
@@ -41,6 +42,9 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         Node<K, V> node = new Node<>(key, value);
         int index = findIndex(node.key);
         if (table[index] != null && node.getHashCode() == table[index].getHashCode()) {
+            if (!(node == table[index] || node.getKey().equals(table[index].getKey()))) {
+                return false;
+            }
             table[index].value = node.value;
             this.modCount++;
             return true;
