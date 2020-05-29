@@ -41,8 +41,8 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         }
         Node<K, V> node = new Node<>(key, value);
         int index = findIndex(node.key);
-        if (table[index] != null && node.getHashCode() == table[index].getHashCode()) {
-            if (!(node == table[index] || equalsWithNulls(node.getKey(), table[index].getKey()))) {
+        if (table[index] != null && hash(node.key) == hash(table[index].key)) {
+            if (!(node.key == table[index].key || node.key.equals(table[index].key))) {
                 return false;
             }
             table[index].key = node.key;
@@ -67,7 +67,7 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return null;
         }
-        if (isThatKey(this.table[index].getKey(), key)) {
+        if (hash(key) == hash(this.table[index].key)) {
             return this.table[index].value;
         }
         return null;
@@ -84,7 +84,7 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return false;
         }
-        if (isThatKey(this.table[index].getKey(), key)) {
+        if (hash(key) == hash(this.table[index].key)) {
             this.table[index] = null;
             this.size--;
             this.modCount++;
@@ -117,38 +117,6 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
      */
     private int findIndex(K key) {
         return hash(key) & (capacity - 1);
-    }
-
-    /**
-     * Returns if keys are equal.
-     *
-     * @param storageKey Key in storage.
-     * @param key        Key.
-     * @return Result.
-     */
-    public boolean isThatKey(K storageKey, K key) {
-        int sk = (storageKey == null) ? 0 : storageKey.hashCode();
-        int k = (key == null) ? 0 : key.hashCode();
-        return k == sk
-                && equalsWithNulls(key, storageKey);
-    }
-
-    /**
-     * Equals method with null checking.
-     * Incoming objects can be null.
-     *
-     * @param a Object.
-     * @param b Object.
-     * @return Result.
-     */
-    public static boolean equalsWithNulls(Object a, Object b) {
-        if (a == b) {
-            return true;
-        }
-        if ((a == null) || (b == null)) {
-            return false;
-        }
-        return a.equals(b);
     }
 
     /**
@@ -230,12 +198,6 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         private G key;
         private D value;
 
-        public int getHashCode() {
-            return hashCode;
-        }
-
-        private final int hashCode;
-
         /**
          * Return key.
          *
@@ -263,11 +225,6 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         public Node(G key, D value) {
             this.key = key;
             this.value = value;
-            if (key == null) {
-                this.hashCode = 0;
-            } else {
-                this.hashCode = key.hashCode();
-            }
         }
     }
 }
