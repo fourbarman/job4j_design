@@ -42,9 +42,10 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         Node<K, V> node = new Node<>(key, value);
         int index = findIndex(node.key);
         if (table[index] != null && node.getHashCode() == table[index].getHashCode()) {
-            if (!(node == table[index] || node.getKey().equals(table[index].getKey()))) {
+            if (!(node == table[index] || equalsWithNulls(node.getKey(), table[index].getKey()))) {
                 return false;
             }
+            table[index].key = node.key;
             table[index].value = node.value;
             this.modCount++;
             return true;
@@ -126,8 +127,28 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
      * @return Result.
      */
     public boolean isThatKey(K storageKey, K key) {
-        return key.hashCode() == storageKey.hashCode()
-                && key.equals(storageKey);
+        int sk = (storageKey == null) ? 0 : storageKey.hashCode();
+        int k = (key == null) ? 0 : key.hashCode();
+        return k == sk
+                && equalsWithNulls(key, storageKey);
+    }
+
+    /**
+     * Equals method with null checking.
+     * Incoming objects can be null.
+     *
+     * @param a Object.
+     * @param b Object.
+     * @return Result.
+     */
+    public static boolean equalsWithNulls(Object a, Object b) {
+        if (a == b) {
+            return true;
+        }
+        if ((a == null) || (b == null)) {
+            return false;
+        }
+        return a.equals(b);
     }
 
     /**
@@ -206,7 +227,7 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
      * @since 14.05.2020.
      */
     public static class Node<G, D> {
-        private final G key;
+        private G key;
         private D value;
 
         public int getHashCode() {

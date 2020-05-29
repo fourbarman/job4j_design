@@ -99,6 +99,26 @@ public class SimpleHashMapTest {
     }
 
     /**
+     * Test when insert two null keys than success.
+     */
+    @Test
+    public void whenInsertNullKeys() {
+        map.insert(null, "one");
+        assertThat(map.insert(null, "two"), is(true));
+    }
+
+    /**
+     * Test when insert couple null keys than get last value.
+     */
+    @Test
+    public void whenInsertNullGetNull() {
+        map.insert(null, "one");
+        map.insert(null, "four");
+        map.insert(null, "three");
+        assertThat(map.get(null), is("three"));
+    }
+
+    /**
      * Test when get from empty storage or storage has no such key than return null.
      */
     @Test
