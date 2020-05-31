@@ -67,7 +67,8 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return null;
         }
-        if (hash(key) == hash(this.table[index].key)) {
+        if (hash(key) == hash(this.table[index].key)
+                && (key == table[index].key || key.equals(table[index].key))) {
             return this.table[index].value;
         }
         return null;
@@ -84,7 +85,8 @@ public class SimpleHashMap<K, V> implements Iterable<SimpleHashMap.Node<K, V>> {
         if (this.table[index] == null) {
             return false;
         }
-        if (hash(key) == hash(this.table[index].key)) {
+        if (hash(key) == hash(this.table[index].key)
+                && (key == table[index].key || key.equals(table[index].key))) {
             this.table[index] = null;
             this.size--;
             this.modCount++;
