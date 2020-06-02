@@ -57,4 +57,36 @@ public class TreeTest {
                 is(false)
         );
     }
+    /**
+     * Test when tree is binary.
+     */
+    @Test
+    public void whenTreeIsBinaryThanReturnTrue() {
+        Tree<Integer> tree = new Tree<>(1);
+        tree.add(1, 2);
+        tree.add(1, 3);
+        tree.add(2, 3);
+        tree.add(4, 5);
+        tree.add(5, 6);
+        assertThat(
+                tree.isBinary(),
+                is(true)
+        );
+    }
+    /**
+     * Test when tree is not binary.
+     */
+    @Test
+    public void whenTreeIsNotBinary() {
+        Tree<Integer> tree = new Tree<>(1);
+        tree.add(1, 2);
+        tree.add(1, 3);
+        tree.add(1, 4);
+        tree.add(4, 5);
+        tree.add(5, 6);
+        assertThat(
+                tree.isBinary(),
+                is(false)
+        );
+    }
 }

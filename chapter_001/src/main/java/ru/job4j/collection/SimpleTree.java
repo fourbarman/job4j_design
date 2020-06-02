@@ -30,6 +30,12 @@ public interface SimpleTree<E> {
     Optional<Node<E>> findBy(E value);
 
     /**
+     * Check if tree is binary.
+     * @return boolean result.
+     */
+    public boolean isBinary();
+
+    /**
      * Node.
      *
      * @author fourbarman (maks.java@yandex.ru).
