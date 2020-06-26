@@ -47,7 +47,7 @@ public class UserEmailMerge {
         ArrayList<User> out = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
             for (int j = 0; j < out.size(); j++) {
-                if (!Collections.disjoint(users.get(i).emails, out.get(j).emails)) {
+                if (hasDuplicates(users.get(i).emails, out.get(j).emails)) {
                     out.get(j).emails.addAll(users.get(i).emails);
                     users.get(i).merged = true;
                     break;
@@ -58,5 +58,22 @@ public class UserEmailMerge {
             }
         }
         return out;
+    }
+
+    /**
+     * Checks if two Sets have equal elements.
+     * Adds all elements from second Set to first and compares sizes
+     *
+     * @param first  Set<String>.
+     * @param second Set<String>.
+     * @return Boolean.
+     */
+    private boolean hasDuplicates(Set<String> first, Set<String> second) {
+        Set<String> sum = new HashSet<>(first);
+        sum.addAll(second);
+        if (sum.size() != first.size() + second.size()) {
+            return true;
+        }
+        return false;
     }
 }
