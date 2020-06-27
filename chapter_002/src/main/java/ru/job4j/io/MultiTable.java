@@ -18,7 +18,7 @@ public class MultiTable {
      * @return int[][].
      */
 
-    public int[][] tableToFile(int number) {
+    private int[][] table(int number) {
         int[][] table = new int[number][number];
         for (int i = 0; i < number; i++) {
             for (int j = 0; j < number; j++) {
@@ -29,14 +29,12 @@ public class MultiTable {
     }
 
     /**
-     * Main method.
      * Writes multiplication table to file.
      *
-     * @param args Args.
+     * @param number Top border of table.
      */
-    public static void main(String[] args) {
-        MultiTable mt = new MultiTable();
-        int[][] t = mt.tableToFile(8);
+    public void writeToFile(int number) {
+        int[][] t = table(number);
         try (FileOutputStream out = new FileOutputStream("result.txt")) {
             for (int[] ints : t) {
                 out.write(Arrays.toString(ints).getBytes());
