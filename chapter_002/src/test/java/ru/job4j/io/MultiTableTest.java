@@ -32,6 +32,7 @@ public class MultiTableTest {
     @Test
     public void whenNumberIs2ThanFileHasMultiTableForNumber2() {
         multiTable.writeToFile(2);
+        String t = "";
         StringBuilder expected = new StringBuilder();
         expected.append("[1, 2]")
                 .append("[2, 4]");
@@ -41,11 +42,12 @@ public class MultiTableTest {
             while ((read = in.read()) != -1) {
                 text.append((char) read);
             }
-            String t = text.toString();
+            t = text.toString();
             t = t.replace("\n", "").replace("\r", "");
-            assertThat(t, is(expected.toString()));
+            //assertThat(t, is(expected.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        assertThat(t, is(expected.toString()));
     }
 }
