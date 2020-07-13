@@ -1,6 +1,7 @@
 package ru.job4j.io;
 
 import java.io.FileInputStream;
+
 /**
  * MultiTable.
  *
@@ -11,6 +12,7 @@ import java.io.FileInputStream;
 public class EvenNumberFile {
     /**
      * Main method.
+     *
      * @param args args.
      */
     public static void main(String[] args) {
@@ -21,14 +23,15 @@ public class EvenNumberFile {
                 text.append((char) read);
             }
             String[] nums = text.toString().split(System.lineSeparator());
-            int[] numbers = new int[nums.length];
-            for (int i = 0; i < nums.length; i++) {
-                numbers[i] = Integer.parseInt(nums[i]);
-            }
-            for (int num : numbers) {
-                if (num % 2 == 0) {
-                    System.out.println("Even number: " + num);
+            try {
+                for (String s : nums) {
+                    int num = Integer.parseInt(s);
+                    if (num % 2 == 0) {
+                        System.out.println("Even number: " + num);
+                    }
                 }
+            } catch (NullPointerException nfe) {
+                nfe.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
