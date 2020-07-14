@@ -30,8 +30,8 @@ public class EvenNumberFile {
                         System.out.println("Even number: " + num);
                     }
                 }
-            } catch (NullPointerException nfe) {
-                nfe.printStackTrace();
+            } catch (NumberFormatException numberFormatException) {
+                numberFormatException.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
