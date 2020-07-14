@@ -1,5 +1,6 @@
 package ru.job4j.collection;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,12 +25,10 @@ public class Analize {
         Info info = new Info();
         Map<Integer, String> prev = previous.stream()
                 .collect(Collectors.toMap(user -> user.id, user -> user.name));
-        Map<Integer, String> cur = current.stream()
-                .collect(Collectors.toMap(user -> user.id, user -> user.name));
-        info.deleted = deleted(prev, cur);
-        for (Map.Entry<Integer, String> entry : cur.entrySet()) {
-            Integer key = entry.getKey();
-            String value = entry.getValue();
+        info.deleted = deleted(prev, current);
+        for (User user : current) {
+            Integer key = user.getId();
+            String value = user.getName();
             if (prev.containsKey(key) && !prev.get(key).equals(value)) {
                 info.changed++;
             } else if (!prev.containsKey(key)) {
@@ -43,14 +42,17 @@ public class Analize {
      * Returns number of unequal elements.
      *
      * @param prev Map<Integer, String>.
-     * @param cur  Map<Integer, String>.
+     * @param cur  List<User>.
      * @return Integer.
      */
-    private Integer deleted(Map<Integer, String> prev, Map<Integer, String> cur) {
+    private Integer deleted(Map<Integer, String> prev, List<User> cur) {
         Integer deleted = 0;
+        List<Integer> cur_id = new ArrayList<>();
+        for (User u : cur) {
+            cur_id.add(u.getId());
+        }
         for (Map.Entry<Integer, String> entry : prev.entrySet()) {
-            Integer key = entry.getKey();
-            if (!cur.containsKey(key)) {
+            if (!cur_id.contains(entry.getKey())) {
                 deleted++;
             }
         }
@@ -74,6 +76,14 @@ public class Analize {
         public User(int id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
         }
 
         /**
