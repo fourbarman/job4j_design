@@ -1,6 +1,5 @@
 package ru.job4j.collection;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,38 +24,18 @@ public class Analize {
         Info info = new Info();
         Map<Integer, String> prev = previous.stream()
                 .collect(Collectors.toMap(user -> user.id, user -> user.name));
-        info.deleted = deleted(prev, current);
+        String value;
         for (User user : current) {
-            Integer key = user.getId();
-            String value = user.getName();
-            if (prev.containsKey(key) && !prev.get(key).equals(value)) {
+            value = prev.remove(user.getId());
+            if (value != null && !value.equals(user.getName())) {
                 info.changed++;
-            } else if (!prev.containsKey(key)) {
+            }
+            if (value == null) {
                 info.added++;
             }
         }
+        info.deleted = prev.size();
         return info;
-    }
-
-    /**
-     * Returns number of unequal elements.
-     *
-     * @param prev Map<Integer, String>.
-     * @param cur  List<User>.
-     * @return Integer.
-     */
-    private Integer deleted(Map<Integer, String> prev, List<User> cur) {
-        Integer deleted = 0;
-        List<Integer> cur_id = new ArrayList<>();
-        for (User u : cur) {
-            cur_id.add(u.getId());
-        }
-        for (Map.Entry<Integer, String> entry : prev.entrySet()) {
-            if (!cur_id.contains(entry.getKey())) {
-                deleted++;
-            }
-        }
-        return deleted;
     }
 
     /**
