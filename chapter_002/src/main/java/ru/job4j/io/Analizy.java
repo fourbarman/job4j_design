@@ -1,6 +1,8 @@
 package ru.job4j.io;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Config.
@@ -26,20 +28,31 @@ public class Analizy {
      * @param target String outgoing file path.
      */
     public void unavailable(String source, String target) {
-        try (BufferedReader in = new BufferedReader(new FileReader(source));
-             PrintWriter out = new PrintWriter(new FileOutputStream(target))) {
+        try (BufferedReader in = new BufferedReader(new FileReader(source))) {
             String line;
+            List<String> list = new ArrayList<>();
             while ((line = in.readLine()) != null) {
                 if (isUnavailable(line)) {
-                    out.write(line.split(" ")[1] + ";");
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(line.split(" ")[1])
+                            .append(";");
                     line = in.readLine();
                     while (isUnavailable(line)) {
                         line = in.readLine();
                         if (!isUnavailable(line)) {
-                            out.write(line.split(" ")[1] + System.lineSeparator());
+                            sb.append(line.split(" ")[1])
+                                    .append(System.lineSeparator());
+                            list.add(sb.toString());
                         }
                     }
                 }
+            }
+            try (PrintWriter out = new PrintWriter(new FileOutputStream(target))) {
+                for (String s : list) {
+                    out.write(s);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
