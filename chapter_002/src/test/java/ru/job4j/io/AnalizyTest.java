@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertThat;
  * @since 30.07.2020.
  */
 public class AnalizyTest {
+    Analizy analizy;
     String src = "server_log.txt";
     String trg = "unavailable.csv";
     List<String> onePeriod = new ArrayList<>(List.of(
@@ -26,6 +28,9 @@ public class AnalizyTest {
             "400 16:16:16",
             "500 17:17:17",
             "300 18:18:18"
+    ));
+    List<String> expectedOnePeriod = new ArrayList<>(List.of(
+            "16:16:16;18:18:18"
     ));
     List<String> threePeriods = new ArrayList<>(List.of(
             "200 15:15:15",
@@ -38,9 +43,106 @@ public class AnalizyTest {
             "500 22:22:22",
             "200 23:23:23"
     ));
+    List<String> expectedThreePeriods = new ArrayList<>(List.of(
+            "16:16:16;18:18:18",
+            "20:20:20;23:23:23"
+    ));
+
+    /**
+     * Test when analise one period.
+     */
+    @Test
+    public void analiseTest() {
+        analizy = new Analizy();
+        assertThat(analizy.analise(onePeriod), is(expectedOnePeriod));
+    }
+
+    /**
+     * Test when analise three periods.
+     */
+    @Test
+    public void whenAnaliseThreePeriods() {
+        analizy = new Analizy();
+        assertThat(analizy.analise(threePeriods), is(expectedThreePeriods));
+    }
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
+
+    /**
+     * Test when read from file one period than return list.
+     */
+    @Test
+    public void whenReadFromFileOnePeriodThanReturnList() throws IOException {
+        File source = folder.newFile(src);
+        try (PrintWriter out = new PrintWriter(new FileOutputStream(source))) {
+            for (String s : onePeriod) {
+                out.println(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        analizy = new Analizy();
+        assertThat(analizy.read(source.getAbsolutePath()), is(onePeriod));
+    }
+
+    /**
+     * Test when read from file three periods than return list.
+     */
+    @Test
+    public void whenReadFromFileThreePeriodsThanReturnList() throws IOException {
+        File source = folder.newFile(src);
+        try (PrintWriter out = new PrintWriter(new FileOutputStream(source))) {
+            for (String s : threePeriods) {
+                out.println(s);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        analizy = new Analizy();
+        assertThat(analizy.read(source.getAbsolutePath()), is(threePeriods));
+    }
+
+    /**
+     * Test when write to file one period than file has one period.
+     */
+    @Test
+    public void whenWriteToFileOnePeriodThanReturnList() throws IOException {
+        File target = folder.newFile(trg);
+        analizy = new Analizy();
+        analizy.write(expectedOnePeriod, target.getAbsolutePath());
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(target.getAbsolutePath()))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+            }
+        } catch (NoSuchFileException e) {
+            e.printStackTrace();
+        }
+        assertThat(list, is(List.of("16:16:16;18:18:18")));
+    }
+
+    /**
+     * Test when write to file one period than file has one period.
+     */
+    @Test
+    public void whenWriteToFileThreePeriodsThanReturnList() throws IOException {
+        File target = folder.newFile(trg);
+        analizy = new Analizy();
+        analizy.write(expectedThreePeriods, target.getAbsolutePath());
+        List<String> list = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(target.getAbsolutePath()))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                list.add(line);
+                System.out.println(line);
+            }
+        } catch (NoSuchFileException e) {
+            e.printStackTrace();
+        }
+        assertThat(list, is(List.of("16:16:16;18:18:18", "20:20:20;23:23:23")));
+    }
 
     /**
      * Test when log has one period of unavailable.
@@ -56,10 +158,10 @@ public class AnalizyTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Analizy analizy = new Analizy();
+        analizy = new Analizy();
         analizy.unavailable(source.getAbsolutePath(), target.getAbsolutePath());
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(target))) {
-            assertThat(bufferedReader.readLine(), is("16:16:16;18:18:18"));
+        try (BufferedReader br = new BufferedReader(new FileReader(target))) {
+            assertThat(br.readLine(), is("16:16:16;18:18:18"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,7 +181,7 @@ public class AnalizyTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Analizy analizy = new Analizy();
+        analizy = new Analizy();
         analizy.unavailable(source.getAbsolutePath(), target.getAbsolutePath());
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(target))) {
             StringBuilder sb = new StringBuilder();
