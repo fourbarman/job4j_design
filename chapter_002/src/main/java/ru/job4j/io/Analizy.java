@@ -28,36 +28,11 @@ public class Analizy {
      * @param target String outgoing file path.
      */
     public void unavailable(String source, String target) {
-        write(analise(read(source)), target);
+        write(read(source), target);
     }
 
     /**
-     * Analise list of strings for 400 and 500 substrings.
-     * Returns list of changing status.
-     *
-     * @param strings List to analise.
-     * @return List of strings.
-     */
-    public List<String> analise(List<String> strings) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < strings.size(); i++) {
-            if (isUnavailable(strings.get(i))) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(strings.get(i).split(" ")[1]).append(";");
-                while (isUnavailable(strings.get(i)) && i < strings.size()) {
-                    i++;
-                    if (!isUnavailable(strings.get(i))) {
-                        sb.append(strings.get(i).split(" ")[1]);
-                        list.add(sb.toString());
-                    }
-                }
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Reads file and returns List of lines.
+     * Reads file and returns List of server changing downtime time status.
      *
      * @param source File path.
      * @return List.
@@ -67,7 +42,18 @@ public class Analizy {
         try (BufferedReader in = new BufferedReader(new FileReader(source))) {
             String line;
             while ((line = in.readLine()) != null) {
-                list.add(line);
+                if (isUnavailable(line)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(line.split(" ")[1])
+                            .append(";");
+                    while (isUnavailable(line)) {
+                        line = in.readLine();
+                        if (!isUnavailable(line)) {
+                            sb.append(line.split(" ")[1]);
+                            list.add(sb.toString());
+                        }
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

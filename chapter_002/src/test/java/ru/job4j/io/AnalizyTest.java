@@ -48,23 +48,6 @@ public class AnalizyTest {
             "20:20:20;23:23:23"
     ));
 
-    /**
-     * Test when analise one period.
-     */
-    @Test
-    public void analiseTest() {
-        analizy = new Analizy();
-        assertThat(analizy.analise(onePeriod), is(expectedOnePeriod));
-    }
-
-    /**
-     * Test when analise three periods.
-     */
-    @Test
-    public void whenAnaliseThreePeriods() {
-        analizy = new Analizy();
-        assertThat(analizy.analise(threePeriods), is(expectedThreePeriods));
-    }
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -83,7 +66,7 @@ public class AnalizyTest {
             e.printStackTrace();
         }
         analizy = new Analizy();
-        assertThat(analizy.read(source.getAbsolutePath()), is(onePeriod));
+        assertThat(analizy.read(source.getAbsolutePath()), is(expectedOnePeriod));
     }
 
     /**
@@ -100,7 +83,7 @@ public class AnalizyTest {
             e.printStackTrace();
         }
         analizy = new Analizy();
-        assertThat(analizy.read(source.getAbsolutePath()), is(threePeriods));
+        assertThat(analizy.read(source.getAbsolutePath()), is(expectedThreePeriods));
     }
 
     /**
