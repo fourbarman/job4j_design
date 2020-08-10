@@ -20,33 +20,19 @@ public class Dir {
      */
     public static long folderSize(File directory) {
         long length = 0;
-        if (directory.isFile())
+        if (directory.isFile()) {
             length += directory.length();
-        else {
+        } else {
             for (File file : Objects.requireNonNull(directory.listFiles())) {
-                if (file.isFile())
+                if (file.isFile()) {
                     length += file.length();
-                else
+                } else {
                     length += folderSize(file);
+                }
             }
         }
 
         return length;
-    }
-
-    /**
-     * Returns path to projects directory.
-     *
-     * @param path Path.
-     * @return Path to projects directory.
-     */
-    private static String currentPath(String path) {
-        String currentPath = System.getProperty("user.dir");
-        String del = "job4j_design";
-        StringBuilder stringBuilder = new StringBuilder(currentPath);
-        int start = currentPath.indexOf(del);
-        int stop = start + del.length();
-        return stringBuilder.delete(start - 1, stop).toString();
     }
 
     /**
@@ -56,7 +42,10 @@ public class Dir {
      * @param args Args.
      */
     public static void main(String[] args) {
-        String path = currentPath(System.getProperty("user.dir"));
+        if (args.length == 0) {
+            throw new IllegalStateException("Root folder is null. Usage java -jar dir.jar ROOT_FOLDER");
+        }
+        String path = args[0];
         File file = new File(path);
         if (!file.exists()) {
             throw new IllegalArgumentException(String.format("Not exist %s", file.getAbsoluteFile()));
