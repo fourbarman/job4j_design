@@ -17,13 +17,20 @@ import java.util.List;
 public class Search {
     /**
      * Main method.
+     * Usage with two args parameters.
+     * First - file path.
+     * Second - file extension.
      *
-     * @param args Args.
+     * @param args Args File path, Extension.
      * @throws IOException Exception.
      */
     public static void main(String[] args) throws IOException {
-        Path start = Paths.get(".");
-        search(start, "js").forEach(System.out::println);
+        if (args.length != 2) {
+            throw new IllegalStateException("Use with parameters: java -jar dir.jar ROOT_FOLDER FILE_EXTENSION");
+        }
+        Path start = Paths.get(args[0]);
+        String extension = args[1];
+        search(start, extension).forEach(System.out::println);
     }
 
     /**
