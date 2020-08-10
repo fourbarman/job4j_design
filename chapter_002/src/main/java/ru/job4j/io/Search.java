@@ -7,12 +7,12 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * Config.
- * Reads .properties file and returns property value by key.
+ * Search.
+ * Prints file names with given extension by predicate.
  *
  * @author fourbarman (maks.java@yandex.ru).
  * @version %I%, %G%.
- * @since 29.07.2020.
+ * @since 07.08.2020.
  */
 public class Search {
     /**
