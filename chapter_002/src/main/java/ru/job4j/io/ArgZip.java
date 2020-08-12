@@ -1,8 +1,6 @@
 package ru.job4j.io;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ArgZip {
     private final String[] args;
@@ -30,7 +28,7 @@ public class ArgZip {
         }
         File dir = new File(args[0].split("=")[1]);
         if (!dir.exists()) {
-            throw new IllegalStateException("Directory " + dir.getAbsolutePath() + "doesn't exist!");
+            throw new IllegalStateException("Directory " + dir.getAbsolutePath() + " doesn't exist!");
         }
         if (!dir.isDirectory())
         {
