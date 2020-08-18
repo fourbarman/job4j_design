@@ -1,7 +1,5 @@
 package ru.job4j.io;
 
-import java.io.File;
-
 /**
  * ArgZip.
  * Validate args.
@@ -17,38 +15,43 @@ public class ArgZip {
         this.args = args;
     }
 
+    /**
+     * Returns true if 3 parameters are given.
+     * Else throws ISException.
+     *
+     * @return result.
+     */
     public boolean valid() {
         if (args.length != 3) {
-            throw new IllegalStateException("Not enough parameters!" +
-                    "\n Example: -d=C:\\projects\\job4j_design\\chapter_001\\ -e=class -o=project.zip");
+            throw new IllegalStateException("Not enough parameters!"
+                    + "\n Example: -d=C:\\projects\\job4j_design\\chapter_001\\ -e=class -o=project.zip");
         }
-//        if (!args[0].startsWith("-d=")) {
-//            throw new IllegalStateException("Wrong \"directory\" parameter");
-//        }
-//        if (!args[1].startsWith("-e=")) {
-//            throw new IllegalStateException("Wrong \"exclude\" parameter");
-//        }
-//        if (!args[2].startsWith("-o=")) {
-//            throw new IllegalStateException("Wrong \"output\" parameter");
-//        }
-//        File dir = new File(args[0].split("=")[1]);
-//        if (!dir.exists()) {
-//            throw new IllegalStateException("Directory " + dir.getAbsolutePath() + " doesn't exist!");
-//        }
-//        if (!dir.isDirectory()) {
-//            throw new IllegalStateException("Wrong \" not a directory \" parameter ");
-//        }
         return true;
     }
 
+    /**
+     * Returns directory path from args.
+     *
+     * @return String.
+     */
     public String directory() {
         return args[0].split("=")[1];
     }
 
+    /**
+     * Returns exclude extension from args.
+     *
+     * @return String.
+     */
     public String exclude() {
         return args[1].split("=")[1];
     }
 
+    /**
+     * Returns output filename from args.
+     *
+     * @return String.
+     */
     public String output() {
         return args[2].split("=")[1];
     }

@@ -18,7 +18,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class Zip {
     /**
-     * Zips catalogue to target file.
+     * Zips catalogue to target filename.
      *
      * @param sources List of file paths.
      * @param target  Target file to zip into.
