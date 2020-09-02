@@ -1,8 +1,8 @@
 package ru.job4j.io.chat;
 
-;
-
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -21,7 +21,8 @@ public class Listener {
     private final Path wordsPath;
     private final Path logPath;
     private final FileIO fileIo;
-    StringBuilder log;
+    private StringBuilder log;
+    private Map<String, State> stateMap;
 
     /**
      * Constructor.
@@ -38,6 +39,9 @@ public class Listener {
             throw new IllegalStateException("Words file not found!");
         }
         this.fileIo = new FileIO(wordsPath, logPath);
+        stateMap = new HashMap<>();
+        stateMap.put("continue", new Print(fileIo.getWords(this.wordsPath)));
+        stateMap.put("stop", new Stop());
     }
 
     /**
@@ -83,14 +87,7 @@ public class Listener {
      * @param string String.
      */
     public void changeState(String string) {
-        if ("continue".equals(string) && state instanceof Stop) {
-            Print print = new Print(fileIo.getWords(wordsPath));
-            setState(print);
-            log.append("Program: ").append(state.getName()).append(System.lineSeparator());
-        } else if ("stop".equals(string) && state instanceof Print) {
-            setState(new Stop());
-            log.append("Program: ").append(state.getName()).append(System.lineSeparator());
-        }
+        setState(this.stateMap.getOrDefault(string, this.state));
     }
 
     /**
