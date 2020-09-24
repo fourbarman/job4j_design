@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
  * @since 21.09.2020.
  */
 public class Chat {
+    String logPath;
     boolean run;
     List<String> words;
     Map<String, Consumer<String>> map;
@@ -25,19 +26,21 @@ public class Chat {
     Consumer<String> printRandom = (s) -> {
         log.append(s).append(System.lineSeparator());
         StringBuilder random = new StringBuilder();
-        random.append(new Random().nextInt(words.size()));
+        random.append(words.get(new Random().nextInt(words.size())));
         System.out.println(random.toString());
         log.append(random).append(System.lineSeparator());
     };
     Consumer<String> stop = (s) -> {
+        log.append(s).append(System.lineSeparator());
         while (!"continue".equals(s)) {
             s = this.input.next();
             log.append(s).append(System.lineSeparator());
         }
     };
     Consumer<String> end = (s) -> {
+        log.append(s).append(System.lineSeparator());
         this.setRun(false);
-        this.writeLog(this.log);
+        this.writeLog(this.log, this.logPath);
     };
 
     /**
@@ -64,9 +67,9 @@ public class Chat {
      *
      * @return List of strings.
      */
-    private List<String> getWords() {
+    public List<String> getWords(String wordsPath) {
         List<String> list = null;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("./words.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(wordsPath))) {
             list = bufferedReader.lines().collect(Collectors.toList());
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -79,8 +82,8 @@ public class Chat {
      *
      * @param log Log.
      */
-    private void writeLog(StringBuilder log) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("./log.txt"))) {
+    public void writeLog(StringBuilder log, String logPath) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(logPath))) {
             bufferedWriter.write(log.toString());
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -90,8 +93,9 @@ public class Chat {
     /**
      * Initialise starting states.
      */
-    public void init() {
-        this.words = this.getWords();
+    public void init(String wordsPath, String logPath) {
+        this.words = this.getWords(wordsPath);
+        this.logPath = logPath;
         this.map = new HashMap<>();
         this.setRun(true);
         log = new StringBuilder();
@@ -118,7 +122,9 @@ public class Chat {
      */
     public static void main(String[] args) {
         Chat chat = new Chat(new ConsoleInput(new Scanner(System.in)));
-        chat.init();
+        String wordsPath = "./words.txt";
+        String logPath = "./log.txt";
+        chat.init(wordsPath, logPath);
         chat.run();
     }
 }
