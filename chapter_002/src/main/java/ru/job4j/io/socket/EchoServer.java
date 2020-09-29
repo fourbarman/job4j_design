@@ -19,13 +19,15 @@ public class EchoServer {
      * Main method.
      * Creates localhost socket on 9000 port.
      * Accepts all incoming messages and prints them to console.
-     * Exit when get message "Bye".
+     * Prints message string to browser.
+     * Exit when get message equals "Exit".
      *
      * @param args String args.
      * @throws IOException Exception.
      */
     public static void main(String[] args) throws IOException {
-        String exit = "?msg=Bye";
+        String msg = "msg=";
+        String exit = "Exit";
         try (ServerSocket server = new ServerSocket(9000)) {
             boolean isRunning = true;
             while (isRunning) {
@@ -34,13 +36,19 @@ public class EchoServer {
                      BufferedReader in = new BufferedReader(
                              new InputStreamReader(socket.getInputStream()))) {
                     String str;
+                    String stringTail;
                     while (!(str = in.readLine()).isEmpty()) {
                         System.out.println(str);
-                        if (str.contains(exit)) {
-                            isRunning = false;
+                        if (str.contains(msg)) {
+                            stringTail = str.substring(str.indexOf(msg)
+                                    + msg.length()).split(" ")[0];
+                            if (exit.equals(stringTail)) {
+                                isRunning = false;
+                            }
+                            out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                            out.write(stringTail.getBytes());
                         }
                     }
-                    out.write("HTTP/1.1 200 OK\r\n\\".getBytes());
                 }
             }
         }
