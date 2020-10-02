@@ -1,5 +1,9 @@
 package ru.job4j.io.socket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.job4j.io.UsageLog4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +19,7 @@ import java.net.Socket;
  * @since 29.09.2020.
  */
 public class EchoServer {
+    private static final Logger LOG = LoggerFactory.getLogger(UsageLog4j.class.getName());
     /**
      * Main method.
      * Creates localhost socket on 9000 port.
@@ -23,9 +28,8 @@ public class EchoServer {
      * Exit when get message equals "Exit".
      *
      * @param args String args.
-     * @throws IOException Exception.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         String msg = "msg=";
         String exit = "Exit";
         try (ServerSocket server = new ServerSocket(9000)) {
@@ -51,6 +55,8 @@ public class EchoServer {
                     }
                 }
             }
+        } catch (IOException ioException) {
+            LOG.error("Server start error", ioException);
         }
     }
 }
