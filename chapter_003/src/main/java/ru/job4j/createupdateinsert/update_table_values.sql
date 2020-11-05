@@ -1,0 +1,1 @@
+update vehicles set model = 'Mitsubishi', max_speed = '200', description = 'Mitsubishi Motors Corporation';
