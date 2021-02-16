@@ -4,7 +4,7 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Properties;
@@ -19,25 +19,34 @@ import static org.quartz.SimpleScheduleBuilder.*;
  *
  * @author fourbarman (maks.java@yandex.ru).
  * @version %I%, %G%.
- * @since 12.02.2021.
+ * @since 16.02.2021.
  */
 public class AlertRabbit {
-    static Connection connection;
 
+    /**
+     * Main method.
+     * Write timestamp to DB using quartz library.
+     *
+     * @param args Args.
+     */
     public static void main(String[] args) {
-        try {
-            String pathToProp = System.getProperty("user.dir") + "/chapter_003/src/main/java/ru/job4j/quartz/rabbit.properties";
-            AlertRabbit alertRabbit = new AlertRabbit();
-            alertRabbit.init(pathToProp);
+        AlertRabbit alertRabbit = new AlertRabbit();
+        Properties props = alertRabbit.getPropsTest();
+        try (Connection con = DriverManager.getConnection(
+                props.getProperty("jdbc.url"),
+                props.getProperty("jdbc.username"),
+                props.getProperty("jdbc.password"))
+        ) {
+            int interval = Integer.parseInt(props.getProperty("rabbit.interval"));
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
-            data.put("store", connection);
+            data.put("store", con);
             JobDetail job = newJob(Rabbit.class)
                     .usingJobData(data)
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
-                    .withIntervalInSeconds(5)
+                    .withIntervalInSeconds(interval)
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -46,45 +55,53 @@ public class AlertRabbit {
             scheduler.scheduleJob(job, trigger);
             Thread.sleep(10000);
             scheduler.shutdown();
-        } catch (Exception se) {
-            se.printStackTrace();
+        } catch (SQLException | SchedulerException | InterruptedException sqlException) {
+            sqlException.printStackTrace();
         }
-
     }
 
     /**
-     * Connect to DB and retrieve Connection instance and interval.
+     * Get Properties from file.
+     *
+     * @return props Properties.
      */
-    public void init(String path) {
-        try (InputStream input = new FileInputStream(path)) {
-            Properties config = new Properties();
-            config.load(input);
-            Class.forName(config.getProperty("jdbc.driver"));
-            connection = DriverManager.getConnection(
-                    config.getProperty("jdbc.url"),
-                    config.getProperty("jdbc.username"),
-                    config.getProperty("jdbc.password")
-            );
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+    public Properties getPropsTest() {
+        Properties props = new Properties();
+        try (FileInputStream in = new FileInputStream(
+                "C:\\projects\\job4j_design\\chapter_003\\src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties"
+        )) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return props;
     }
 
+    /**
+     * Rabbit.
+     */
     public static class Rabbit implements Job {
 
-        public Rabbit() {
-            System.out.println(hashCode());
-        }
-
+        /**
+         * Execute job.
+         *
+         * @param context Context.
+         */
         @Override
         public void execute(JobExecutionContext context) {
             try {
-                this.saveTime(connection);
+                Connection con = (Connection) context.getJobDetail().getJobDataMap().get("store");
+                this.saveTime(con);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
 
+        /**
+         * Load timestamp to DB.
+         *
+         * @param cnt Connection.
+         */
         public void saveTime(Connection cnt) throws SQLException {
             try (PreparedStatement ps = cnt.prepareStatement("INSERT INTO rabbit (created_date) VALUES (?)")) {
                 LocalDateTime timeStamp = LocalDateTime.now();
