@@ -68,7 +68,7 @@ public class AlertRabbit {
     public Properties getPropsTest() {
         Properties props = new Properties();
         try (FileInputStream in = new FileInputStream(
-                "C:\\projects\\job4j_design\\chapter_003\\src\\main\\java\\ru\\job4j\\quartz\\rabbit.properties"
+                System.getProperty("user.dir") + "/chapter_003/src/main/java/ru/job4j/quartz/rabbit.properties"
         )) {
             props.load(in);
         } catch (IOException e) {
