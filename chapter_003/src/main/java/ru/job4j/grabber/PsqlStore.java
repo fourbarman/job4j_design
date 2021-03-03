@@ -28,6 +28,12 @@ public class PsqlStore implements Store, AutoCloseable{
         }
     }
 
+    /**
+     * Save Post fields to database.
+     * Throws exception if try to insert duplicate unique value (link).
+     * @param post Post.
+     */
+
     @Override
     public void save(Post post) {
         try (PreparedStatement preparedStatement = cnn.prepareStatement(

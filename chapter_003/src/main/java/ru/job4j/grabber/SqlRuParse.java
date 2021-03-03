@@ -33,8 +33,8 @@ public class SqlRuParse implements Parse {
      */
     @Override
     public Post detail(String link) {
+        Post post = new Post();
         if (!link.isEmpty()) {
-            Post post = new Post();
             try {
                 Document document = Jsoup.connect(link).get();
                 Element element = document.select(".msgTable").first();
@@ -48,7 +48,7 @@ public class SqlRuParse implements Parse {
                 ioException.printStackTrace();
             }
         }
-        return null;
+        return post;
     }
 
     /**
