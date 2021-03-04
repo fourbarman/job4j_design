@@ -16,7 +16,7 @@ public interface Grab {
      *
      * @param parse     Parse object.
      * @param store     Store object.
-     * @param scheduler Scheduler object.
      */
-    void init(Parse parse, Store store, Scheduler scheduler);
+    void init(Parse parse, Store store);
+    //void init(Parse parse, Store store, Scheduler scheduler);
 }

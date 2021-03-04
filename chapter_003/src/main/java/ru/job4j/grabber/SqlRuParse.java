@@ -3,6 +3,7 @@ package ru.job4j.grabber;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +20,28 @@ import java.util.Map;
 public class SqlRuParse implements Parse {
     /**
      * Gets list of posts from site.
-     * @param list String.
+     * @param link String.
      * @return List of posts.
      */
     @Override
-    public List<Post> list(String list) {
-        return null;
+    public List<Post> list(String link) {
+        List<Post> postList = new ArrayList<>();
+        try {
+            Document doc = Jsoup.connect(link).get();
+            Elements row = doc.select(".postslisttopic");
+            for (Element td : row) {
+                Element href = td.child(0);
+                String url = href.attr("href");
+                Post post = detail(url);
+                if (post != null) {
+                    postList.add(post);
+                }
+            }
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        return postList;
     }
 
     /**
@@ -38,12 +56,21 @@ public class SqlRuParse implements Parse {
             try {
                 Document document = Jsoup.connect(link).get();
                 Element element = document.select(".msgTable").first();
-                post.setLink(link);
-                post.setName(element.select(".messageHeader").text());//имя поста
-                post.setText(element.select(".msgBody").next().text());//получили текст поста!
-                String date = element.selectFirst(".msgFooter").ownText();//получили текст из блока footer
-                post.setTime(dateParse(date.replaceAll("[^а-я0-9\\s:,]", "").replaceAll("\\s+$", ""))); //date.replaceAll("[^а-я0-9\\s:,]", "").replaceAll("\\s+$", "")
-                //System.out.println(date);
+                String name = element.select(".messageHeader").text();
+                String text = element.select(".messageHeader").text();
+                if (name.toLowerCase().contains("java") || text.toLowerCase().contains("java")) {
+                    post.setName(name);
+                    post.setLink(link);
+                    post.setText(text);
+                    String date = element.selectFirst(".msgFooter").ownText();//получили текст из блока footer
+                    post.setTime(dateParse(date.replaceAll("[^а-я0-9\\s:,]", "").replaceAll("\\s+$", "")));
+                } else {
+                    post = null;
+                }
+                //post.setName(element.select(".messageHeader").text());//имя поста
+                //post.setText(element.select(".msgBody").next().text());//получили текст поста!
+//                String date = element.selectFirst(".msgFooter").ownText();//получили текст из блока footer
+//                post.setTime(dateParse(date.replaceAll("[^а-я0-9\\s:,]", "").replaceAll("\\s+$", "")));
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -59,7 +86,6 @@ public class SqlRuParse implements Parse {
     public Instant dateParse(String stringDate) {
         Instant instant;
         try {
-            System.out.println("Start string: " + stringDate);
             String out = "";
             Map<String, String> map = new HashMap<>();
             map.put("янв", "01");
