@@ -39,10 +39,14 @@ public class PsqlStore implements Store, AutoCloseable{
         try (PreparedStatement preparedStatement = cnn.prepareStatement(
                 "insert into post (name, text, link, created) values (?, ?, ?, ?)")
         ) {
+            System.out.println("try to write to db");
             preparedStatement.setString(1, post.getName());
             preparedStatement.setString(2, post.getText());
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setObject(4, Timestamp.from(post.getTime()));
+            preparedStatement.execute();
+        } catch (org.postgresql.util.PSQLException psqlException) {
+            psqlException.getMessage();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
