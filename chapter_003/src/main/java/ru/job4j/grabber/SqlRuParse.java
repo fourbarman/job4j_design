@@ -57,7 +57,8 @@ public class SqlRuParse implements Parse {
                 Document document = Jsoup.connect(link).get();
                 Element element = document.select(".msgTable").first();
                 String name = element.select(".messageHeader").text();
-                String text = element.select(".messageHeader").text();
+                //String text = element.select(".messageHeader").text();
+                String text = element.select(".msgBody").next().text();
                 if (name.toLowerCase().contains("java") || text.toLowerCase().contains("java")) {
                     post.setName(name);
                     post.setLink(link);
