@@ -1,5 +1,6 @@
 package ru.job4j.grabber;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -32,4 +33,12 @@ public interface Store {
      * @return Post.
      */
     Post findById(String id);
+    /**
+     * Write parse timestamp to storage.
+     */
+    void saveParseTime();
+    /**
+     * Get last parse time.
+     */
+    Instant getLastParseTime();
 }

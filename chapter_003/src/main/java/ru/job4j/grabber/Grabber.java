@@ -36,6 +36,8 @@ public class Grabber implements Grab{
             System.out.println("--------------------");
             psqlStore.save(post);
         }
+        psqlStore.saveParseTime();
+        System.out.println(psqlStore.getLastParseTime());
         System.out.println("Job done!");
     }
 

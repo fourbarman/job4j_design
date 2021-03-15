@@ -97,4 +97,30 @@ public class PsqlStore implements Store, AutoCloseable{
             cnn.close();
         }
     }
+
+    @Override
+    public void saveParseTime() {
+        //String saveTimestamp = "insert into parse_time (parse_time) values (?)";
+        try(PreparedStatement preparedStatement = cnn.prepareStatement(
+                "insert into parse_time (parse_timestamp) values (?)")
+        ) {
+            preparedStatement.setTimestamp(1, Timestamp.from(Instant.now()));
+            preparedStatement.execute();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+
+    @Override
+    public Instant getLastParseTime() {
+        Instant time = null;
+        try (Statement statement = cnn.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT max(parse_timestamp) as last_parse_date from parse_time");
+            resultSet.next();
+            time = resultSet.getObject("last_parse_date", Timestamp.class).toInstant();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return time;
+    }
 }
