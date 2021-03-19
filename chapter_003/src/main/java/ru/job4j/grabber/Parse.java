@@ -1,5 +1,6 @@
 package ru.job4j.grabber;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public interface Parse {
      * @param list String list.
      * @return List.
      */
-    List<Post> list(String list);
+    List<Post> list(String list, Instant startDate);
 
     /**
      * Gets details from posts.
@@ -28,4 +29,13 @@ public interface Parse {
      * @return Post.
      */
     Post detail(String link);
+
+    /**
+     * Return true if stored last parse time is weaker than current.
+     */
+    boolean needToParse(Instant instant, Instant parseTime);
+    /**
+     * Return last page to parse.
+     */
+    public int getLastPage(String link);
 }

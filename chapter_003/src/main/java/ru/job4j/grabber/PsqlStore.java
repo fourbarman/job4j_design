@@ -2,11 +2,6 @@ package ru.job4j.grabber;
 
 import java.sql.*;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class PsqlStore implements Store, AutoCloseable{
@@ -111,13 +106,21 @@ public class PsqlStore implements Store, AutoCloseable{
         }
     }
 
+    /**
+     * Return last parse date from DB.
+     * @return Instant.
+     */
     @Override
     public Instant getLastParseTime() {
         Instant time = null;
         try (Statement statement = cnn.createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT max(parse_timestamp) as last_parse_date from parse_time");
-            resultSet.next();
-            time = resultSet.getObject("last_parse_date", Timestamp.class).toInstant();
+            if(resultSet.next()) {
+                Timestamp ts = resultSet.getObject("last_parse_date", Timestamp.class);
+                if (ts != null) {
+                    time = ts.toInstant();
+                }
+            }
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
