@@ -22,10 +22,10 @@ public class Grabber implements Grab{
         //Check get properties from app.properties
         Grabber grabber = new Grabber();
         grabber.getCfg();
-        System.out.println(grabber.cfg.getProperty("jdbc.driver"));
-        System.out.println(grabber.cfg.getProperty("jdbc.url"));
-        System.out.println(grabber.cfg.getProperty("jdbc.username"));
-        System.out.println(grabber.cfg.getProperty("jdbc.password"));
+//        System.out.println(grabber.cfg.getProperty("jdbc.driver"));
+//        System.out.println(grabber.cfg.getProperty("jdbc.url"));
+//        System.out.println(grabber.cfg.getProperty("jdbc.username"));
+//        System.out.println(grabber.cfg.getProperty("jdbc.password"));
         //Try to write to DB
         PsqlStore psqlStore = new PsqlStore(grabber.cfg);
         Parse parse = new SqlRuParse();
@@ -40,7 +40,8 @@ public class Grabber implements Grab{
             psqlStore.save(post);
         }
         psqlStore.saveParseTime();
-        System.out.println(lastParseDate);
+        //System.out.println(lastParseDate);
+        //проверка продолжительности парса
         Instant stop = Instant.now();
         System.out.println("Job done!");
         System.out.println("Elapsed time: " + (stop.getEpochSecond() - start.getEpochSecond()));

@@ -1,5 +1,7 @@
 package ru.job4j.grabber;
 
+import org.jsoup.nodes.Document;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -37,5 +39,5 @@ public interface Parse {
     /**
      * Return last page to parse.
      */
-    public int getLastPage(String link);
+    int getLastPage(String link);
 }

@@ -34,11 +34,12 @@ public class SqlRuParse implements Parse {
             }
             int index = 1;
             boolean continueParse = true;
-            while (continueParse) {
+            int numberOfPages = getLastPage(link);
+            while (continueParse && index <= numberOfPages) {
                 // формируем ссылку для страницы
                 String pageLink = link + "/" + index;
                 System.out.println(pageLink);
-                Document doc = Jsoup.connect(pageLink).followRedirects(false).get();
+                Document doc = Jsoup.connect(pageLink).get();
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
                     Element href = td.child(0);
@@ -78,6 +79,14 @@ public class SqlRuParse implements Parse {
                 String name = element.select(".messageHeader").text();
                 String text = element.select(".msgBody").next().text();
                 if (name.toLowerCase().contains("java") || text.toLowerCase().contains("java")) {
+                    ///
+                    if (name.contains("Java-разработчик Москва")) {
+                        System.out.println("НАЙДЕН ПОСТ!");
+                        System.out.println(name);
+                        System.out.println(link);
+                        System.out.println(text);
+                    }
+                    ///
                     post.setName(name);
                     post.setLink(link);
                     post.setText(text);
@@ -160,7 +169,8 @@ public class SqlRuParse implements Parse {
             try {
                 Document document = Jsoup.connect(link).get();
                 Element element = document.select(".sort_options").last();
-
+                Element el = element.select("tbody tr td a").last();
+                result = Integer.parseInt(el.text());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
