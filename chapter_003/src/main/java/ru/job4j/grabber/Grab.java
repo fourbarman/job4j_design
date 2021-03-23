@@ -1,6 +1,7 @@
 package ru.job4j.grabber;
 
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 
 /**
  * Grab.
@@ -17,6 +18,6 @@ public interface Grab {
      * @param parse     Parse object.
      * @param store     Store object.
      */
-    void init(Parse parse, Store store);
-    //void init(Parse parse, Store store, Scheduler scheduler);
+    //void init(Parse parse, Store store);
+    void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException;
 }

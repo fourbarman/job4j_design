@@ -7,6 +7,10 @@ import java.util.*;
 public class PsqlStore implements Store, AutoCloseable{
     private Connection cnn;
 
+    /**
+     * Constructor.
+     * @param cfg Config for DB connection.
+     */
     public PsqlStore(Properties cfg) {
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
@@ -28,7 +32,6 @@ public class PsqlStore implements Store, AutoCloseable{
      * Throws exception if try to insert duplicate unique value (link).
      * @param post Post.
      */
-
     @Override
     public void save(Post post) {
         try (PreparedStatement preparedStatement = cnn.prepareStatement(
@@ -47,6 +50,10 @@ public class PsqlStore implements Store, AutoCloseable{
         }
     }
 
+    /**
+     * Returns list of all posts from DB.
+     * @return List.
+     */
     @Override
     public List<Post> getAll() {
         List<Post> list = new ArrayList<>();
@@ -66,6 +73,11 @@ public class PsqlStore implements Store, AutoCloseable{
         return list;
     }
 
+    /**
+     * Find post by ID from DB.
+     * @param id Post id.
+     * @return Post.
+     */
     @Override
     public Post findById(String id) {
         Post post = null;
@@ -86,6 +98,10 @@ public class PsqlStore implements Store, AutoCloseable{
         return post;
     }
 
+    /**
+     * Close
+     * @throws Exception Exception.
+     */
     @Override
     public void close() throws Exception {
         if (cnn != null) {
@@ -93,6 +109,9 @@ public class PsqlStore implements Store, AutoCloseable{
         }
     }
 
+    /**
+     * Write parse time to DB
+     */
     @Override
     public void saveParseTime() {
         //String saveTimestamp = "insert into parse_time (parse_time) values (?)";

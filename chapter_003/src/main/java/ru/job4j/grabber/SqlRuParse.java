@@ -30,13 +30,12 @@ public class SqlRuParse implements Parse {
         List<Post> postList = new ArrayList<>();
         try {
             if (startDate == null) {
-                startDate = Instant.parse("1900-01-01T00:00:00.00Z"); //last parse date from DB
+                startDate = Instant.parse("1900-01-01T00:00:00.00Z");
             }
             int index = 1;
             boolean continueParse = true;
             int numberOfPages = getLastPage(link);
             while (continueParse && index <= numberOfPages) {
-                // формируем ссылку для страницы
                 String pageLink = link + "/" + index;
                 System.out.println(pageLink);
                 Document doc = Jsoup.connect(pageLink).get();
@@ -45,16 +44,15 @@ public class SqlRuParse implements Parse {
                     Element href = td.child(0);
                     String url = href.attr("href");
                     Post post = detail(url);
-                    // если пост != null проверяем дату поста: если дата > даты последнего парса, то пишем лист и продолжаем.
                     if (post != null) {
                         if (needToParse(post.getTime(), startDate)) {
                             postList.add(post);
-                            index++;
                         } else {
                             continueParse = false;
                         }
                     }
                 }
+                index++;
             }
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -80,12 +78,12 @@ public class SqlRuParse implements Parse {
                 String text = element.select(".msgBody").next().text();
                 if (name.toLowerCase().contains("java") || text.toLowerCase().contains("java")) {
                     ///
-                    if (name.contains("Java-разработчик Москва")) {
-                        System.out.println("НАЙДЕН ПОСТ!");
-                        System.out.println(name);
-                        System.out.println(link);
-                        System.out.println(text);
-                    }
+//                    if (name.contains("Java-разработчик Москва")) {
+//                        System.out.println("НАЙДЕН ПОСТ!");
+//                        System.out.println(name);
+//                        System.out.println(link);
+//                        System.out.println(text);
+//                    }
                     ///
                     post.setName(name);
                     post.setLink(link);
