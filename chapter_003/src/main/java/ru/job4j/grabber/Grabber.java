@@ -1,12 +1,11 @@
 package ru.job4j.grabber;
 
 import org.quartz.*;
-import org.quartz.impl.StdScheduler;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.time.Instant;
 import java.util.Properties;
 
@@ -14,40 +13,18 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+/**
+ * Grabber.
+ * Parses www.sql.ru for getting job advertisements.
+ * When started, parses page with interval from app.properties.
+ *
+ * @author fourbarman (maks.java@yandex.ru).
+ * @version %I%, %G%.
+ * @since 24.03.2021.
+ */
 public class Grabber implements Grab {
-    //    private final Properties cfg = new Properties();
-//
-//    @Override
-//    public void init(Parse parse, Store store) {
-//    }
-//
-//    public static void main(String[] args) {
-//        Grabber grabber = new Grabber();
-//        grabber.getCfg();
-//        PsqlStore psqlStore = new PsqlStore(grabber.cfg);
-//        Parse parse = new SqlRuParse();
-//        Instant lastParseDate = psqlStore.getLastParseTime(); //last parse date from DB
-//        //передаем ссылку и дату последнего парса
-//        for (Post post : parse.list("https://www.sql.ru/forum/job-offers", lastParseDate)) {
-//            psqlStore.save(post);
-//        }
-//        psqlStore.saveParseTime(); //пишем в БД дату текущего парса
-//    }
-//
-//    /**
-//     * Return config from app.properties
-//     */
-//    public void getCfg() {
-//        String executionPath = System.getProperty("user.dir");
-//        Path confPath = Paths.get(executionPath + "/chapter_003/src/main/java/ru/job4j/grabber/db/app.properties");
-//        try (FileInputStream in = new FileInputStream(confPath.toFile())) {
-//            cfg.load(in);
-//        } catch (IOException ioException) {
-//            ioException.printStackTrace();
-//        }
-//    }
+
     private final Properties cfg = new Properties();
-    //Properties cfg = new Properties();
 
     public Store store() {
         return new PsqlStore(cfg);
@@ -80,6 +57,7 @@ public class Grabber implements Grab {
 
     /**
      * Init parameters for Scheduler.
+     * Job starts with jdbc.time from app.properties
      *
      * @param parse     Parse object.
      * @param store     Store object.
@@ -94,16 +72,13 @@ public class Grabber implements Grab {
         JobDetail job = newJob(GrabJob.class)
                 .usingJobData(data)
                 .build();
-        System.out.println("job detail created");
         SimpleScheduleBuilder times = simpleSchedule()
-                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("jdbc.time")))
-                .repeatForever();
-        System.out.println("scheduler created");
+                .withRepeatCount(5)
+                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("jdbc.time")));
         Trigger trigger = newTrigger()
                 .startNow()
                 .withSchedule(times)
                 .build();
-        System.out.println("trigger created");
         scheduler.scheduleJob(job, trigger);
     }
 
@@ -120,19 +95,15 @@ public class Grabber implements Grab {
          */
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
+            System.out.println("Job started");
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            System.out.println("I'm JOB!");
-
-            Instant lastParseDate = store.getLastParseTime(); //last parse date from DB
-            System.out.println(lastParseDate);
-            //передаем ссылку и дату последнего парса
-            for (Post post : parse.list("https://www.sql.ru/forum/job-offers", lastParseDate)) {
+            Instant lastParseDate = store.getLastParseTime();
+            for (Post post : parse.list(parse.getLink(), lastParseDate)) {
                 store.save(post);
             }
-            store.saveParseTime(); //пишем в БД дату текущего парса
-            System.out.println("Job done!");
+            store.saveParseTime();
         }
     }
 
@@ -148,5 +119,33 @@ public class Grabber implements Grab {
         Scheduler scheduler = grab.scheduler();
         Store store = grab.store();
         grab.init(new SqlRuParse(), store, scheduler);
+        grab.web(store);
+    }
+
+    /**
+     * Starts server and returns all rows from DB.
+     *
+     * @param store Store object.
+     */
+    public void web(Store store) {
+        new Thread(() -> {
+            try (ServerSocket server = new ServerSocket(Integer.parseInt(cfg.getProperty("port")))) {
+                System.out.println("Thread started");
+                while (!server.isClosed()) {
+                    Socket socket = server.accept();
+                    try (OutputStream out = socket.getOutputStream()) {
+                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                        for (Post post : store.getAll()) {
+                            out.write(post.toString().getBytes());
+                            out.write(System.lineSeparator().getBytes());
+                        }
+                    } catch (IOException io) {
+                        io.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }

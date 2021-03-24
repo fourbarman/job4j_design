@@ -36,8 +36,14 @@ public interface Parse {
      * Return true if stored last parse time is weaker than current.
      */
     boolean needToParse(Instant instant, Instant parseTime);
+
     /**
      * Return last page to parse.
      */
     int getLastPage(String link);
+
+    /**
+     * Return link.
+     */
+    String getLink();
 }

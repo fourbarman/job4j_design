@@ -35,7 +35,7 @@ public class PsqlStore implements Store, AutoCloseable{
     @Override
     public void save(Post post) {
         try (PreparedStatement preparedStatement = cnn.prepareStatement(
-                "insert into post (name, text, link, created) values (?, ?, ?, ?)")
+                "insert into post (name, text, link, created) values (?, ?, ?, ?) ON CONFLICT DO NOTHING")
         ) {
             System.out.println("try to write to db");
             preparedStatement.setString(1, post.getName());
@@ -43,9 +43,11 @@ public class PsqlStore implements Store, AutoCloseable{
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setObject(4, Timestamp.from(post.getTime()));
             preparedStatement.execute();
-        } catch (org.postgresql.util.PSQLException psqlException) {
-            psqlException.getMessage();
-        } catch (SQLException sqlException) {
+        }
+//        catch (org.postgresql.util.PSQLException psqlException) {
+//            psqlException.getMessage();
+//        }
+        catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
