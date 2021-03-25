@@ -7,17 +7,18 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * SqlRuParse.
+ * Class for parsing site sql.ru.
+ *
+ * @author fourbarman (maks.java@yandex.ru).
+ * @version %I%, %G%.
+ * @since 25.03.2021.
+ */
 public class SqlRuParse implements Parse {
     private final String link = "https://www.sql.ru/forum/job-offers";
     private final DateTimeParser dateTimeParser = new SqlRuDateTimeParser();
@@ -44,7 +45,6 @@ public class SqlRuParse implements Parse {
             int numberOfPages = getLastPage(link);
             while (continueParse && index <= numberOfPages) {
                 String pageLink = link + "/" + index;
-                System.out.println("now parsing: " + pageLink);
                 Document doc = Jsoup.connect(pageLink).get();
                 Elements row = doc.select(".postslisttopic");
                 for (Element td : row) {
@@ -64,7 +64,6 @@ public class SqlRuParse implements Parse {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
-
         return postList;
     }
 
@@ -87,8 +86,7 @@ public class SqlRuParse implements Parse {
                     post.setName(name);
                     post.setLink(link);
                     post.setText(text);
-                    String date = element.selectFirst(".msgFooter").ownText();//получили текст из блока footer
-                    //post.setTime(dateParse(date.replaceAll("[^а-я0-9\\s:,]", "").replaceAll("\\s+$", "")));
+                    String date = element.selectFirst(".msgFooter").ownText();
                     post.setTime(dateTimeParser.parse(date));
                 } else {
                     post = null;
@@ -99,52 +97,6 @@ public class SqlRuParse implements Parse {
         }
         return post;
     }
-
-    /**
-     * Parse date and time from string.
-     *
-     * @param stringDate Incoming string containing date and time.
-     * @return Instant with date and time.
-     */
-//    public Instant dateParse(String stringDate) {
-//        Instant instant;
-//        try {
-//            String out = "";
-//            Map<String, String> map = new HashMap<>();
-//            map.put("янв", "01");
-//            map.put("фев", "02");
-//            map.put("мар", "03");
-//            map.put("апр", "04");
-//            map.put("май", "05");
-//            map.put("июн", "06");
-//            map.put("июл", "07");
-//            map.put("авг", "08");
-//            map.put("сен", "09");
-//            map.put("окт", "10");
-//            map.put("ноя", "11");
-//            map.put("дек", "12");
-//            String[] dateTime = stringDate.split(",");
-//            if (Character.isDigit(dateTime[0].charAt(0))) {
-//                String[] date = dateTime[0].split(" ");
-//                date[1] = map.get(date[1]);
-//                if (date[0].length() < 2) {
-//                    date[0] = "0" + date[0];
-//                }
-//                dateTime[0] = "20" + date[2] + "-" + date[1] + "-" + date[0];
-//            } else if ("сегодня".equals(dateTime[0])) {
-//                dateTime[0] = LocalDate.now().toString();
-//            } else if ("вчера".equals(dateTime[0])) {
-//                dateTime[0] = LocalDate.now().minusDays(1).toString();
-//            }
-//            out = dateTime[0] + "," + dateTime[1];
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm");
-//            LocalDateTime localDateTime = LocalDateTime.parse(out, formatter);
-//            instant = localDateTime.toInstant(ZoneOffset.UTC);
-//        } catch (DateTimeParseException dateTimeParseException) {
-//            instant = Instant.now();
-//        }
-//        return instant;
-//    }
 
     /**
      * Compares current system date and stored last parse date.

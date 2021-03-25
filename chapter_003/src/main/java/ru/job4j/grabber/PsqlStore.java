@@ -4,11 +4,20 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
-public class PsqlStore implements Store, AutoCloseable{
+/**
+ * PsqlStore.
+ * DAO for PostgreSQL database.
+ *
+ * @author fourbarman (maks.java@yandex.ru).
+ * @version %I%, %G%.
+ * @since 17.02.2021.
+ */
+public class PsqlStore implements Store, AutoCloseable {
     private Connection cnn;
 
     /**
      * Constructor.
+     *
      * @param cfg Config for DB connection.
      */
     public PsqlStore(Properties cfg) {
@@ -29,7 +38,8 @@ public class PsqlStore implements Store, AutoCloseable{
 
     /**
      * Save Post fields to database.
-     * Throws exception if try to insert duplicate unique value (link).
+     * If try to insert duplicate unique value (link) does nothing.
+     *
      * @param post Post.
      */
     @Override
@@ -43,17 +53,14 @@ public class PsqlStore implements Store, AutoCloseable{
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setObject(4, Timestamp.from(post.getTime()));
             preparedStatement.execute();
-        }
-//        catch (org.postgresql.util.PSQLException psqlException) {
-//            psqlException.getMessage();
-//        }
-        catch (SQLException sqlException) {
+        } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
 
     /**
      * Returns list of all posts from DB.
+     *
      * @return List.
      */
     @Override
@@ -65,9 +72,10 @@ public class PsqlStore implements Store, AutoCloseable{
                 Post post = new Post();
                 post.setId(rs.getInt("ID"));
                 post.setName(rs.getString("NAME"));
-                post.setName(rs.getString("TEXT"));
-                post.setName(rs.getString("LINK"));
+                post.setText(rs.getString("TEXT"));
+                post.setLink(rs.getString("LINK"));
                 post.setTime(rs.getObject("CREATED", Timestamp.class).toInstant());
+                list.add(post);
             }
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -77,6 +85,7 @@ public class PsqlStore implements Store, AutoCloseable{
 
     /**
      * Find post by ID from DB.
+     *
      * @param id Post id.
      * @return Post.
      */
@@ -84,9 +93,11 @@ public class PsqlStore implements Store, AutoCloseable{
     public Post findById(String id) {
         Post post = null;
         Integer intId = Integer.parseInt(id);
-        if (intId != null) {
+        System.out.println(intId);
+        if (intId != 0) {
             try (Statement statement = cnn.createStatement()) {
                 ResultSet rs = statement.executeQuery("SELECT * FROM post WHERE id = " + "'" + id + "'");
+                rs.next();
                 post = new Post();
                 post.setId(rs.getInt("ID"));
                 post.setName(rs.getString("NAME"));
@@ -102,6 +113,7 @@ public class PsqlStore implements Store, AutoCloseable{
 
     /**
      * Close
+     *
      * @throws Exception Exception.
      */
     @Override
@@ -117,7 +129,7 @@ public class PsqlStore implements Store, AutoCloseable{
     @Override
     public void saveParseTime() {
         //String saveTimestamp = "insert into parse_time (parse_time) values (?)";
-        try(PreparedStatement preparedStatement = cnn.prepareStatement(
+        try (PreparedStatement preparedStatement = cnn.prepareStatement(
                 "insert into parse_time (parse_timestamp) values (?)")
         ) {
             preparedStatement.setTimestamp(1, Timestamp.from(Instant.now()));
@@ -129,6 +141,7 @@ public class PsqlStore implements Store, AutoCloseable{
 
     /**
      * Return last parse date from DB.
+     *
      * @return Instant.
      */
     @Override
@@ -136,7 +149,7 @@ public class PsqlStore implements Store, AutoCloseable{
         Instant time = null;
         try (Statement statement = cnn.createStatement()) {
             ResultSet resultSet = statement.executeQuery("SELECT max(parse_timestamp) as last_parse_date from parse_time");
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 Timestamp ts = resultSet.getObject("last_parse_date", Timestamp.class);
                 if (ts != null) {
                     time = ts.toInstant();

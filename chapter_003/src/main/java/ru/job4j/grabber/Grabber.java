@@ -23,7 +23,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * @since 24.03.2021.
  */
 public class Grabber implements Grab {
-
     private final Properties cfg = new Properties();
 
     public Store store() {
@@ -51,13 +50,12 @@ public class Grabber implements Grab {
         String s = System.getProperty("user.dir");
         try (InputStream in = new FileInputStream(s + "/chapter_003/src/main/java/ru/job4j/grabber/db/app.properties")) {
             this.cfg.load(in);
-            System.out.println("cfg loaded");
         }
     }
 
     /**
      * Init parameters for Scheduler.
-     * Job starts with jdbc.time from app.properties
+     * Job starts with time and interval options from app.properties.
      *
      * @param parse     Parse object.
      * @param store     Store object.
@@ -73,8 +71,8 @@ public class Grabber implements Grab {
                 .usingJobData(data)
                 .build();
         SimpleScheduleBuilder times = simpleSchedule()
-                .withRepeatCount(5)
-                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("jdbc.time")));
+                .withRepeatCount(Integer.parseInt(cfg.getProperty("time")))
+                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("interval")));
         Trigger trigger = newTrigger()
                 .startNow()
                 .withSchedule(times)
@@ -89,13 +87,14 @@ public class Grabber implements Grab {
 
         /**
          * Execute job.
+         * Starts parse with parse object and stores parsed information to store object.
+         * Saves parse date and time to store object.
          *
          * @param context Context.
          * @throws JobExecutionException JobExecutionException.
          */
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
-            System.out.println("Job started");
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
@@ -124,20 +123,20 @@ public class Grabber implements Grab {
 
     /**
      * Starts server and returns all rows from DB.
+     * Uses UTF8.
      *
      * @param store Store object.
      */
     public void web(Store store) {
         new Thread(() -> {
             try (ServerSocket server = new ServerSocket(Integer.parseInt(cfg.getProperty("port")))) {
-                System.out.println("Thread started");
                 while (!server.isClosed()) {
                     Socket socket = server.accept();
-                    try (OutputStream out = socket.getOutputStream()) {
-                        out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                    try (OutputStreamWriter out = (new OutputStreamWriter(socket.getOutputStream(), "UTF8"))) {
+                        out.write("HTTP/1.1 200 OK\r\n\r\n");
                         for (Post post : store.getAll()) {
-                            out.write(post.toString().getBytes());
-                            out.write(System.lineSeparator().getBytes());
+                            out.write(post.toString());
+                            out.write(System.lineSeparator());
                         }
                     } catch (IOException io) {
                         io.printStackTrace();

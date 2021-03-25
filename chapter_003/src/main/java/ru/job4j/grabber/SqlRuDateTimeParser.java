@@ -9,7 +9,21 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * SqlRuDateTimeParser.
+ * Class for parsing date and time from given string.
+ * For sql.ru date strings.
+ *
+ * @author fourbarman (maks.java@yandex.ru).
+ * @version %I%, %G%.
+ * @since 25.03.2021.
+ */
 public class SqlRuDateTimeParser implements DateTimeParser {
+    /**
+     * Parse date from string and return Instant object.
+     *
+     * @param parse String string.
+     */
     @Override
     public Instant parse(String parse) {
         Instant instant;

@@ -18,6 +18,5 @@ public interface Grab {
      * @param parse     Parse object.
      * @param store     Store object.
      */
-    //void init(Parse parse, Store store);
     void init(Parse parse, Store store, Scheduler scheduler) throws SchedulerException;
 }
