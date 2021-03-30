@@ -12,9 +12,3 @@ create table post
     link    text CONSTRAINT unique_link UNIQUE,
     created timestamp
 );
-
-create table parse_time
-(
-  id serial primary key not null,
-  parse_timestamp timestamp
-);

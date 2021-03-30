@@ -6,7 +6,6 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.time.Instant;
 import java.util.Properties;
 
 import static org.quartz.JobBuilder.newJob;
@@ -17,6 +16,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
  * Grabber.
  * Parses www.sql.ru for getting job advertisements.
  * When started, parses page with interval from app.properties.
+ * Runs first 5 pages.
  *
  * @author fourbarman (maks.java@yandex.ru).
  * @version %I%, %G%.
@@ -88,7 +88,6 @@ public class Grabber implements Grab {
         /**
          * Execute job.
          * Starts parse with parse object and stores parsed information to store object.
-         * Saves parse date and time to store object.
          *
          * @param context Context.
          * @throws JobExecutionException JobExecutionException.
@@ -98,11 +97,10 @@ public class Grabber implements Grab {
             JobDataMap map = context.getJobDetail().getJobDataMap();
             Store store = (Store) map.get("store");
             Parse parse = (Parse) map.get("parse");
-            Instant lastParseDate = store.getLastParseTime();
-            for (Post post : parse.list(parse.getLink(), lastParseDate)) {
+            for (Post post : parse.list(parse.getLink())) {
                 store.save(post);
+                System.out.println("Job completed. Post saved");
             }
-            store.saveParseTime();
         }
     }
 
@@ -123,7 +121,7 @@ public class Grabber implements Grab {
 
     /**
      * Starts server and returns all rows from DB.
-     * Uses UTF8.
+     * Uses cp1251.
      *
      * @param store Store object.
      */
@@ -132,7 +130,7 @@ public class Grabber implements Grab {
             try (ServerSocket server = new ServerSocket(Integer.parseInt(cfg.getProperty("port")))) {
                 while (!server.isClosed()) {
                     Socket socket = server.accept();
-                    try (OutputStreamWriter out = (new OutputStreamWriter(socket.getOutputStream(), "UTF8"))) {
+                    try (OutputStreamWriter out = (new OutputStreamWriter(socket.getOutputStream(), "cp1251"))) {
                         out.write("HTTP/1.1 200 OK\r\n\r\n");
                         for (Post post : store.getAll()) {
                             out.write(post.toString());

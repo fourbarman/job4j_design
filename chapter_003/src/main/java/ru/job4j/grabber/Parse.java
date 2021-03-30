@@ -21,7 +21,7 @@ public interface Parse {
      * @param list String list.
      * @return List.
      */
-    List<Post> list(String list, Instant startDate);
+    List<Post> list(String list);
 
     /**
      * Gets details from posts.
@@ -31,16 +31,6 @@ public interface Parse {
      * @return Post.
      */
     Post detail(String link);
-
-    /**
-     * Return true if stored last parse time is weaker than current.
-     */
-    boolean needToParse(Instant instant, Instant parseTime);
-
-    /**
-     * Return last page to parse.
-     */
-    int getLastPage(String link);
 
     /**
      * Return link.
