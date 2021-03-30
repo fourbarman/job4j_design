@@ -44,7 +44,6 @@ public class SqlRuParse implements Parse {
                     String url = href.attr("href");
                     Post post = detail(url);
                     if (post != null) {
-                        System.out.println(post);
                         postList.add(post);
                     }
                 }

@@ -99,7 +99,6 @@ public class Grabber implements Grab {
             Parse parse = (Parse) map.get("parse");
             for (Post post : parse.list(parse.getLink())) {
                 store.save(post);
-                System.out.println("Job completed. Post saved");
             }
         }
     }

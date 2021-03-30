@@ -47,7 +47,6 @@ public class PsqlStore implements Store, AutoCloseable {
         try (PreparedStatement preparedStatement = cnn.prepareStatement(
                 "insert into post (name, text, link, created) values (?, ?, ?, ?) ON CONFLICT DO NOTHING")
         ) {
-            System.out.println("try to write to db");
             preparedStatement.setString(1, post.getName());
             preparedStatement.setString(2, post.getText());
             preparedStatement.setString(3, post.getLink());
@@ -93,7 +92,6 @@ public class PsqlStore implements Store, AutoCloseable {
     public Post findById(String id) {
         Post post = null;
         Integer intId = Integer.parseInt(id);
-        System.out.println(intId);
         if (intId != 0) {
             try (Statement statement = cnn.createStatement()) {
                 ResultSet rs = statement.executeQuery("SELECT * FROM post WHERE id = " + "'" + id + "'");
