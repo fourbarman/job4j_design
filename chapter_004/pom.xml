@@ -8,10 +8,25 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>13</source>
-                    <target>13</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
+                <plugin>
+                    <!-- Build an executable JAR -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                                <mainClass>ru.job4j.gc.GCDemo</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
         </plugins>
     </build>
     <packaging>jar</packaging>
