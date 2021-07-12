@@ -56,7 +56,7 @@ public class ChatTest {
         }
         chat = new Chat(new ConsoleInput(new Scanner(System.in)));
         chat.init(file.getPath(), log.getPath());
-        assertThat(chat.words.size(), is (3));
+        assertThat(chat.words.size(), is(3));
         assertThat(chat.words.equals(words), is(true));
     }
 
@@ -66,7 +66,7 @@ public class ChatTest {
      * 2. Test log.txt text equals to expected.
      */
     @Test
-    public void whenWriteToLog() throws IOException{
+    public void whenWriteToLog() throws IOException {
         File filePath = folder.newFile(wordsFile);
         File logPath = folder.newFile(logFilePath);
         try (PrintWriter out = new PrintWriter(new FileOutputStream(filePath))) {
@@ -97,7 +97,7 @@ public class ChatTest {
      * Test input.
      */
     @Test
-    public void whenTestOutput() throws IOException{
+    public void whenTestOutput() throws IOException {
         File filePath = folder.newFile(wordsFile);
         File logPath = folder.newFile(logFilePath);
         try (PrintWriter out = new PrintWriter(new FileOutputStream(filePath))) {
@@ -127,9 +127,9 @@ public class ChatTest {
         List<String> userInputList = Arrays.asList(userInput.split("\n").clone());
         chat.init(filePath.getPath(), logPath.getPath());
         chat.run();
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(logPath))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(logPath))) {
             log = bufferedReader.lines().collect(Collectors.toList());
-        }catch(IOException ioException) {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
         }
         System.setIn(sysInBackup);

@@ -41,7 +41,8 @@ public class EchoServer {
                              new InputStreamReader(socket.getInputStream()))) {
                     String str;
                     String stringTail;
-                    while (!(str = in.readLine()).isEmpty()) {
+                    str = in.readLine();
+                    while (!str.isEmpty()) {
                         System.out.println(str);
                         if (str.contains(msg)) {
                             stringTail = str.substring(str.indexOf(msg)
@@ -52,6 +53,7 @@ public class EchoServer {
                             out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
                             out.write(stringTail.getBytes());
                         }
+                        str = in.readLine();
                     }
                 }
             }

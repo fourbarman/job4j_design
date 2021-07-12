@@ -18,13 +18,13 @@ public class UsageLog4j {
         boolean bool = true;
         char ch = 'G';
 
-        LOG.debug("byte : {}, " +
-                "short : {}, " +
-                "int : {}, " +
-                "long : {}, " +
-                "double : {}, " +
-                "float : {}, " +
-                "boolean : {}, " +
-                "char : {}", b, s, i, l, d, f, bool, ch);
+        LOG.debug("byte : {}, "
+                + "short : {}, "
+                + "int : {}, "
+                + "long : {}, "
+                + "double : {}, "
+                + "float : {}, "
+                + "boolean : {}, "
+                + "char : {}", b, s, i, l, d, f, bool, ch);
     }
 }
