@@ -33,7 +33,8 @@ public class Emulator {
                 if (dirFileCache != null) {
                     System.out.println("Enter file name");
                     String file = menu.getAnswer();
-                    dirFileCache.load(file);
+                    String text = dirFileCache.readFile(file);
+                    dirFileCache.put(file, text);
                     System.out.println("Added " + file);
                 } else {
                     System.out.println("Please, provide caching directory first!");

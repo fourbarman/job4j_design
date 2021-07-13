@@ -31,11 +31,11 @@ public abstract class AbstractCache<K, V> {
      * @return Text from file.
      */
     public V get(K key) {
-        if (cache.get(key) != null) {
-            return cache.get(key).get();
-        } else {
+        V value = cache.get(key).get();
+        if (value == null) {
             return this.load(key);
         }
+        return value;
     }
 
     /**

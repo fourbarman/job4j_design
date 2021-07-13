@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Menu.
@@ -35,27 +39,30 @@ public class DirFileCache extends AbstractCache<String, String> {
     }
 
     /**
-     * Load file to cache.
+     * Reload file to cache.
      *
      * @param key Filename.
      * @return Text.
      */
     @Override
     protected String load(String key) {
-        File path = new File(cachingDir + File.separator + key);
-        if (path.exists()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line);
-                    stringBuilder.append("\n");
-                }
-            } catch (IOException ioException) {
-                System.out.println("Файл не найден");
-            }
-            return stringBuilder.toString();
+        return readFile(key);
+    }
+
+    /**
+     * Read file and return text from it.
+     *
+     * @param fileName File name.
+     * @return Text.
+     */
+    public String readFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            Path path = Paths.get(cachingDir + File.separator + fileName);
+            stringBuilder.append(Files.readString(path));
+        } catch (IOException ioException) {
+            System.out.println("Файл не найден");
         }
-        return null;
+        return stringBuilder.toString();
     }
 }
