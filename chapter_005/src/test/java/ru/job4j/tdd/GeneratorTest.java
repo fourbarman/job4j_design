@@ -3,8 +3,6 @@ package ru.job4j.tdd;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.job4j.tdd.template.Generator;
-import ru.job4j.tdd.template.LessDictionaryArguments;
-import ru.job4j.tdd.template.MoreDictionaryArguments;
 import ru.job4j.tdd.template.TextGenerator;
 
 import java.util.HashMap;
@@ -25,7 +23,7 @@ public class GeneratorTest {
         assertEquals(expected, textGenerator.produce(str, words));
     }
 
-    @Test(expected = LessDictionaryArguments.class)
+    @Test(expected = IllegalArgumentException.class)
     @Ignore
     public void produceWhenMapDoesntHaveArguments() {
         Generator textGenerator = new TextGenerator();
@@ -35,7 +33,7 @@ public class GeneratorTest {
         textGenerator.produce("I am a ${name}, Who are ${subject}, You're not ${anotherArgument}?", words);
     }
 
-    @Test(expected = MoreDictionaryArguments.class)
+    @Test(expected = IllegalArgumentException.class)
     @Ignore
     public void produceWhenMapHasMoreArguments() {
         Generator textGenerator = new TextGenerator();
