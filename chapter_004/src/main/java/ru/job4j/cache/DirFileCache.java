@@ -1,10 +1,7 @@
 package ru.job4j.cache;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.lang.ref.SoftReference;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +14,7 @@ import java.nio.file.Paths;
  * @since 07.07.2021.
  */
 public class DirFileCache extends AbstractCache<String, String> {
-    //Caching dir path.
+
     private final String cachingDir;
 
     /**

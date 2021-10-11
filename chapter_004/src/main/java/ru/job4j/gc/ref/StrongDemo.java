@@ -17,7 +17,6 @@ public class StrongDemo {
      * @throws InterruptedException Exception.
      */
     public static void main(String[] args) throws InterruptedException {
-        //example1();
         example2();
     }
 

@@ -44,7 +44,6 @@ public class MultiTableTest {
             }
             t = text.toString();
             t = t.replace("\n", "").replace("\r", "");
-            //assertThat(t, is(expected.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }

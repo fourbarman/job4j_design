@@ -21,8 +21,6 @@ public class WeakDemo {
      * @param args String args.
      */
     public static void main(String[] args) throws InterruptedException {
-        //example1();
-        //example2();
         example3();
     }
 

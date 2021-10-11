@@ -19,7 +19,6 @@ public class SoftDemo {
      * @param args String args.
      */
     public static void main(String[] args) {
-        //example1();
         example2();
     }
 
