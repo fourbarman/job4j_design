@@ -12,7 +12,7 @@ import java.util.List;
  * @version %I%, %G%.
  * @since 03.10.2021.
  */
-public class Trash {
+public class Trash extends CheckExpireDays implements Store {
     public Trash() {
         this.list = new ArrayList<>();
     }
@@ -21,7 +21,12 @@ public class Trash {
         return list;
     }
 
-    List<Food> list;
+    private List<Food> list;
+
+    @Override
+    public boolean accept(Food food) {
+        return 0 <= checkExpireDays(food) && checkExpireDays(food) >= 100;
+    }
 
     /**
      * Adds Food to List.
@@ -31,4 +36,5 @@ public class Trash {
     public void add(Food food) {
         this.list.add(food);
     }
+
 }

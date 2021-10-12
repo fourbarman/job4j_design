@@ -1,8 +1,6 @@
 package ru.job4j.lsp.foodstore;
 
-import java.time.LocalDate;
-
-import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.List;
 
 /**
  * FoodSender.
@@ -15,10 +13,11 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * @since 03.10.2021.
  */
 public class ControllQuality {
-    Context context;
-    Warehouse warehouse;
-    Trash trash;
-    Shop shop;
+    private List<Store> storeList;
+
+    public ControllQuality(List<Store> storeList) {
+        this.storeList = storeList;
+    }
 
     /**
      * If 25% expired than send Food to Warehouse.
@@ -30,58 +29,12 @@ public class ControllQuality {
      */
     public void sendFood(Food food) {
         if (food != null) {
-            if (checkExpireDays(food) < 25) {
-                context = new ContextSender(new StrategySendToWarehouse(warehouse));
-                context.send(food);
-            } else if (25 <= checkExpireDays(food) && checkExpireDays(food) <= 75) {
-                context = new ContextSender(new StrategySendToShop(shop));
-                context.send(food);
-            } else if (75 < checkExpireDays(food) && checkExpireDays(food) < 100) {
-                context = new ContextSender(new StrategySendToShopDiscount(shop));
-                context.send(food);
-            } else {
-                context = new ContextSender(new StrategySendToTrash(trash));
-                context.send(food);
+            for (Store store : storeList) {
+                if (store.accept(food)) {
+                    store.add(food);
+                }
             }
         }
     }
 
-    /**
-     * Calculates percentage of expired left.
-     *
-     * @param food Food object.
-     * @return Percentage.
-     */
-    private double checkExpireDays(Food food) {
-        double expire = DAYS.between(food.createDate, food.expireDate);
-        double daysLeft = DAYS.between(LocalDate.now(), food.expireDate);
-        return 100 - ((daysLeft / expire) * 100);
-    }
-
-    /**
-     * Set warehouse.
-     *
-     * @param warehouse Warehouse.
-     */
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
-    }
-
-    /**
-     * Set warehouse.
-     *
-     * @param trash Trash.
-     */
-    public void setTrash(Trash trash) {
-        this.trash = trash;
-    }
-
-    /**
-     * Set warehouse.
-     *
-     * @param shop Shop.
-     */
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
 }

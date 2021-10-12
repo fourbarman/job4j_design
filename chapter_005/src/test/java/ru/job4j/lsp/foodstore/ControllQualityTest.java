@@ -61,7 +61,7 @@ public class ControllQualityTest {
         controllQuality.sendFood(potato);
         assertEquals(1, shop.getList().size());
         assertEquals(shop.getList().get(0), potato);
-        assertEquals(shop.getList().get(0).price, potato.price, 0.0);
+        assertEquals(shop.getList().get(0).getPrice(), potato.getPrice(), 0.0);
     }
 
     /**
@@ -73,7 +73,7 @@ public class ControllQualityTest {
         controllQuality.sendFood(apple);
         assertEquals(1, shop.getList().size());
         assertEquals(shop.getList().get(0), apple);
-        assertEquals(shop.getList().get(0).price, 180, 0.0);
+        assertEquals(shop.getList().get(0).getPrice(), 180, 0.0);
     }
 
     /**

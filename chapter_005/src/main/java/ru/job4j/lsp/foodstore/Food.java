@@ -13,11 +13,61 @@ import java.time.LocalDate;
  */
 public abstract class Food {
 
-    String name;
-    LocalDate expireDate;
-    LocalDate createDate;
-    double price;
-    int discount;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(LocalDate expireDate) {
+        this.expireDate = expireDate;
+    }
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+
+    public String toString() {
+        return "{" + this.getName()
+                + ", " + this.getCreateDate()
+                + ", " + this.getExpireDate()
+                + ", " + this.getExpireDate()
+                + ", " + this.getPrice()
+                + ", " + this.getDiscount()
+                + "}";
+    }
+
+    private String name;
+    private LocalDate expireDate;
+    private LocalDate createDate;
+    private double price;
+    private int discount;
 
     /**
      * Constructor.
