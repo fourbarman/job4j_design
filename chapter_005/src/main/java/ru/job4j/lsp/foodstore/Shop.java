@@ -35,7 +35,7 @@ public class Shop extends CheckExpireDays implements Store {
      */
     public void add(Food food) {
         if (75 <= checkExpireDays(food)) {
-            food.setPrice(food.getPrice() - (food.getPrice()/100) * food.getDiscount());
+            food.setPrice(food.getPrice() - (food.getPrice() / 100) * food.getDiscount());
         }
         this.list.add(food);
     }
