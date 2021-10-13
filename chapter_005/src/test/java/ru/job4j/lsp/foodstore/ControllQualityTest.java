@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -33,11 +34,10 @@ public class ControllQualityTest {
      */
     @Before
     public void setVars() {
-        controllQuality = new ControllQuality();
-
         shop = new Shop();
         trash = new Trash();
         warehouse = new Warehouse();
+        controllQuality = new ControllQuality(List.of(shop, trash, warehouse));
         apple = new Fruit("Apple",
                 LocalDate.now().minusYears(2),
                 LocalDate.now().plusMonths(1), 200, 10);
@@ -57,7 +57,6 @@ public class ControllQualityTest {
      */
     @Test
     public void whenAdd25to75PercentExpiredThanAddToShop() {
-        controllQuality.setShop(shop);
         controllQuality.sendFood(potato);
         assertEquals(1, shop.getList().size());
         assertEquals(shop.getList().get(0), potato);
@@ -69,7 +68,6 @@ public class ControllQualityTest {
      */
     @Test
     public void whenAddMore75PercentExpiredThanAddToShopWithDiscount() {
-        controllQuality.setShop(shop);
         controllQuality.sendFood(apple);
         assertEquals(1, shop.getList().size());
         assertEquals(shop.getList().get(0), apple);
@@ -81,7 +79,6 @@ public class ControllQualityTest {
      */
     @Test
     public void whenAddLess25PercentExpiredThanAddToWarehouse() {
-        controllQuality.setWarehouse(warehouse);
         controllQuality.sendFood(pork);
         assertEquals(1, warehouse.getList().size());
         assertEquals(warehouse.getList().get(0), pork);
@@ -92,7 +89,6 @@ public class ControllQualityTest {
      */
     @Test
     public void whenAddMore100PercentExpiredThanAddToTrash() {
-        controllQuality.setTrash(trash);
         controllQuality.sendFood(dill);
         assertEquals(1, trash.getList().size());
         assertEquals(trash.getList().get(0), dill);

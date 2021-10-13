@@ -21,8 +21,8 @@ public abstract class CheckExpireDays {
      * @return double.
      */
     public double checkExpireDays(Food food) {
-        double expire = DAYS.between(food.getCreateDate(), food.getExpireDate()); //количество дней = весь срок до окончания.
-        double daysLeft = DAYS.between(LocalDate.now(), food.getExpireDate()); //количество дней с сегодня до окончания срока годности
+        double expire = DAYS.between(food.getCreateDate(), food.getExpireDate());
+        double daysLeft = DAYS.between(LocalDate.now(), food.getExpireDate());
         return 100 - ((daysLeft / expire) * 100);
     }
 }
