@@ -1,4 +1,5 @@
 package ru.job4j.lsp.parkingservice;
+
 /**
  * Vehicle.
  * <p>
@@ -8,5 +9,10 @@ package ru.job4j.lsp.parkingservice;
  * @since 14.10.2021.
  */
 public interface Vehicle {
+    /**
+     * Returns vehicle size.
+     *
+     * @return int size.
+     */
     int getSize();
 }

@@ -1,4 +1,5 @@
 package ru.job4j.lsp.parkingservice;
+
 /**
  * ParkingService.
  * <p>
@@ -8,5 +9,11 @@ package ru.job4j.lsp.parkingservice;
  * @since 14.10.2021.
  */
 public interface ParkingService {
+    /**
+     * Returns true if there is enough space in Parking to park vehicle.
+     *
+     * @param vehicle Vehicle object.
+     * @return boolean.
+     */
     boolean park(Vehicle vehicle);
 }
