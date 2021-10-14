@@ -1,12 +1,15 @@
 package ru.job4j.srp;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import com.google.gson.GsonBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Test.
@@ -117,5 +120,29 @@ public class ReportEngineTest {
                 .append("478.5 + 71.5").append(";")
                 .append(System.lineSeparator());
         assertThat(engine.generate(x -> x.getName().equals("Ivan"), new AccountantReport()), is(expect.toString()));
+    }
+
+    /**
+     * Test generate().
+     * With JSON report object and and filter 1 Employee by name.
+     * Should pass if return report view specified in JSONReport object.
+     */
+    @Test
+    public void testJSONReport() {
+        var lib = new GsonBuilder().create();
+        StringBuilder expect = new StringBuilder().append(lib.toJson(List.of(worker1)));
+        assertThat(engine.generate(x -> x.getName().equals("Ivan"), new JSONReport()), is(expect.toString()));
+    }
+
+    /**
+     * Test generate().
+     * With XML report object and and filter 1 Employee by name.
+     * Should pass if return report view specified in XMLReport object.
+     */
+    @Test
+    public void testXMLReport() {
+        String name = "<name>Ivan</name>";
+        String result = engine.generate(x -> x.getName().equals("Ivan"), new XMLReport());
+        assertThat(result, containsString(name));
     }
 }
