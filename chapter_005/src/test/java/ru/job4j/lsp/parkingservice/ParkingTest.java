@@ -3,8 +3,6 @@ package ru.job4j.lsp.parkingservice;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -16,17 +14,11 @@ import static org.junit.Assert.*;
  * @since 15.10.2021.
  */
 public class ParkingTest {
-    ParkingService parking;
-    List<ParkPlace> parkPlaceList;
-    ParkPlace carParkPlaces;
-    ParkPlace truckParkPlaces;
+    Parking parking;
 
     @Before
     public void setVars() {
-        carParkPlaces = new CarParkPlaces(2);
-        truckParkPlaces = new TruckParkPlaces(2);
-        parkPlaceList = List.of(carParkPlaces, truckParkPlaces);
-        parking = new Parking(parkPlaceList);
+        parking = new Parking(2, 2);
     }
 
     /**
@@ -43,8 +35,9 @@ public class ParkingTest {
      */
     @Test
     public void whenCarAddedAndEnoughParkingPlacesThanCarPlacesIsReducedByOne() {
-        assertThat(carParkPlaces.getPlaceNumber(), is(1));
-        assertThat(truckParkPlaces.getPlaceNumber(), is(2));
+        assertTrue(parking.park(new Car()));
+        assertThat(parking.getCarParkPlace(), is(1));
+        assertThat(parking.getTruckParkPlace(), is(2));
     }
 
     /**
@@ -72,8 +65,8 @@ public class ParkingTest {
     @Test
     public void whenTruckAddedAndEnoughParkingPlacesThanTruckPlacesIsMinusOnePlace() {
         assertTrue(parking.park(new Truck(2)));
-        assertThat(truckParkPlaces.getPlaceNumber(), is(1));
-        assertThat(carParkPlaces.getPlaceNumber(), is(2));
+        assertThat(parking.getCarParkPlace(), is(2));
+        assertThat(parking.getTruckParkPlace(), is(1));
     }
 
     /**
@@ -84,14 +77,18 @@ public class ParkingTest {
     @Test
     public void whenTruckAddedAndNotEnoughParkingPlacesButEnoughInCarParkThanReturnTrue() {
         assertTrue(parking.park(new Truck(2)));
-        assertThat(carParkPlaces.getPlaceNumber(), is(0));
+        assertTrue(parking.park(new Truck(2)));
+        assertTrue(parking.park(new Truck(2)));
+        assertThat(parking.getCarParkPlace(), is(0));
     }
 
     /**
      * When add a Truck and there is NOT enough places in ParkingService than return false.
      */
     @Test
-    public void whenCarAddedAndEnoughParkingPlacesThanReturnTrue() {
+    public void whenTruckAddedAndNOTEnoughParkingPlacesThanReturnFalse() {
+        parking.park(new Car());
+        parking.park(new Car());
         parking.park(new Truck(2));
         parking.park(new Truck(2));
         assertFalse(parking.park(new Truck(2)));
