@@ -93,4 +93,21 @@ public class ControllQualityTest {
         assertEquals(1, trash.getList().size());
         assertEquals(trash.getList().get(0), dill);
     }
+
+    /**
+     * Test when storages contain food than resort.
+     */
+    @Test
+    public void whenAddedFoodAndResort() {
+        controllQuality.sendFood(apple);
+        controllQuality.sendFood(pork);
+        controllQuality.sendFood(potato);
+        controllQuality.sendFood(dill);
+        controllQuality.resort();
+        assertEquals(trash.getList().get(0), dill);
+        assertEquals(warehouse.getList().get(0), pork);
+        assertTrue(shop.getList().contains(apple));
+        assertTrue(shop.getList().contains(potato));
+    }
+
 }

@@ -1,5 +1,6 @@
 package ru.job4j.lsp.foodstore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * @version %I%, %G%.
  * @since 03.10.2021.
  */
-public class ControllQuality {
+public class ControllQuality implements Resort{
     private List<Store> storeList;
 
     public ControllQuality(List<Store> storeList) {
@@ -37,4 +38,18 @@ public class ControllQuality {
         }
     }
 
+    /**
+     * Resort food.
+     * Gets all food from all stores and sorts them again.
+     */
+    @Override
+    public void resort() {
+        List<Food> foodList = new ArrayList<>();
+        for (Store store : storeList) {
+            foodList.addAll(store.getList());
+        }
+        for (Food food : foodList) {
+            sendFood(food);
+        }
+    }
 }
