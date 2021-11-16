@@ -13,7 +13,7 @@ import java.util.List;
  * @version %I%, %G%.
  * @since 03.10.2021.
  */
-public class ControllQuality implements Resort{
+public class ControllQuality implements Resort {
     private List<Store> storeList;
 
     public ControllQuality(List<Store> storeList) {
