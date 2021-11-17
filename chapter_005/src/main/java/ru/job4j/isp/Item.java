@@ -17,8 +17,8 @@ public class Item implements Action {
     }
 
     @Override
-    public void act() {
-        System.out.println(this.name);
+    public String act() {
+        return this.name;
     }
 
     @Override

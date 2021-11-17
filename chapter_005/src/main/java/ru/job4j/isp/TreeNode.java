@@ -49,14 +49,14 @@ public class TreeNode {
      * Recursively searches tree node by name.
      *
      * @param name TreeNode name.
-     * @param node TreeNode.
+     * @param root TreeNode.
      * @return TreeNode.
      */
-    public TreeNode findNode(String name, TreeNode node) {
-        if (name.equals(node.getName())) {
-            return node;
+    public TreeNode findNode(String name, TreeNode root) {
+        if (name.equals(root.getName())) {
+            return root;
         }
-        List<TreeNode> children = node.getChildren();
+        List<TreeNode> children = root.getChildren();
         TreeNode found = null;
         for (TreeNode tn : children) {
             found = tn.findNode(name, tn);
@@ -73,13 +73,17 @@ public class TreeNode {
      *
      * @param pref String prefix.
      */
-    public void print(String pref) {
+    private void printNodes(String pref) {
         System.out.print(pref);
         pref += "---";
         System.out.println(getItem().getActionName() + " " + name);
         for (int i = 0; i < children.size(); i++) {
-            children.get(i).print(pref);
+            children.get(i).printNodes(pref);
         }
+    }
+
+    public void print() {
+        this.printNodes("");
     }
 
     public void setParentName(String parentName) {

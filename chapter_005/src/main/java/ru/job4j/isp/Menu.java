@@ -12,7 +12,7 @@ import java.util.List;
  * @version %I%, %G%.
  * @since 02.11.2021.
  */
-public class Menu {
+public class Menu implements PrintMenu {
     private List<TreeNode> entries = new ArrayList<>();
 
     /**
@@ -64,9 +64,10 @@ public class Menu {
     /**
      * Prints all menu actions.
      */
+    @Override
     public void printMenu() {
         for (TreeNode tn : entries) {
-            tn.print("");
+            tn.print();
         }
     }
 }

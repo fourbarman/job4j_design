@@ -11,7 +11,7 @@ public interface Action {
     /**
      * Executes Action.
      */
-    void act();
+    String act();
 
     /**
      * Returns Action name;
