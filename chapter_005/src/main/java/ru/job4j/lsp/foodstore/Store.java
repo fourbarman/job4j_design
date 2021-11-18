@@ -33,4 +33,9 @@ public interface Store {
      * @param food Food object.
      */
     void add(Food food);
+
+    /**
+     * Clears store.
+     */
+    void clear();
 }

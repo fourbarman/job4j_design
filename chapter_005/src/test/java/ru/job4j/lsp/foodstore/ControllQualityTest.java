@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -64,7 +65,7 @@ public class ControllQualityTest {
     }
 
     /**
-     * Test when add Food with > 74 % expired, than it will be added to shop with doscount storage.
+     * Test when add Food with > 74 % expired, than it will be added to shop with discount storage.
      */
     @Test
     public void whenAddMore75PercentExpiredThanAddToShopWithDiscount() {
@@ -110,4 +111,36 @@ public class ControllQualityTest {
         assertTrue(shop.getList().contains(potato));
     }
 
+
+    /**
+     * Test when storages contain food than resort and stores should not have duplicates.
+     */
+    @Test
+    public void whenAddedFoodAndResortThanStoresShouldNotHaveDuplicates() {
+        controllQuality.sendFood(apple);
+        controllQuality.sendFood(pork);
+        controllQuality.sendFood(potato);
+        controllQuality.sendFood(dill);
+        controllQuality.resort();
+        assertThat(trash.getList().size(), is(1));
+        assertThat(warehouse.getList().size(), is(1));
+        assertThat(shop.getList().size(), is(2));
+    }
+
+    /**
+     * Test when clear store than store should become empty.
+     */
+    @Test
+    public void whenClearStoreThanStoreShouldBecomeEmpty() {
+        controllQuality.sendFood(apple);
+        controllQuality.sendFood(pork);
+        controllQuality.sendFood(potato);
+        controllQuality.sendFood(dill);
+        shop.clear();
+        warehouse.clear();
+        trash.clear();
+        assertTrue(shop.getList().isEmpty());
+        assertTrue(warehouse.getList().isEmpty());
+        assertTrue(trash.getList().isEmpty());
+    }
 }

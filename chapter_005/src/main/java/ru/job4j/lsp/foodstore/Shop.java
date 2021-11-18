@@ -39,4 +39,12 @@ public class Shop extends CheckExpireDays implements Store {
         }
         this.list.add(food);
     }
+
+    /**
+     * Clears store.
+     */
+    @Override
+    public void clear() {
+        this.list.clear();
+    }
 }

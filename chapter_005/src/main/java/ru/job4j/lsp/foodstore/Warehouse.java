@@ -36,4 +36,12 @@ public class Warehouse extends CheckExpireDays implements Store {
     public void add(Food food) {
         this.list.add(food);
     }
+
+    /**
+     * Clears store.
+     */
+    @Override
+    public void clear() {
+        this.list.clear();
+    }
 }

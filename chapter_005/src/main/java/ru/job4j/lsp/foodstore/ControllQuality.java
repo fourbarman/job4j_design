@@ -47,6 +47,7 @@ public class ControllQuality implements Resort {
         List<Food> foodList = new ArrayList<>();
         for (Store store : storeList) {
             foodList.addAll(store.getList());
+            store.clear();
         }
         for (Food food : foodList) {
             sendFood(food);
