@@ -3,8 +3,7 @@ package ru.job4j.isp;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Test.
@@ -56,5 +55,36 @@ public class MenuTest {
         assertThat(menu.select("1").getItem(), is(actionOne));
         assertThat(menu.select("2").getItem(), is(actionTwo));
         assertThat(menu.select("3").getItem(), is(actionThree));
+    }
+
+    /**
+     * Test printMenu() when menu has only one entry than should return entry name.
+     */
+    @Test
+    public void testPrintMenuWhenMenuHasOnlyOneEntry() {
+        Menu menu = new Menu();
+        Action actionOne = new Item("actionOne");
+        menu.add(null, "1", actionOne);
+        assertEquals(menu.printMenu(), "actionOne 1" + System.lineSeparator());
+    }
+
+    /**
+     * Test printMenu() when menu has 3 entries than should return their names in tree style.
+     */
+    @Test
+    public void testPrintMenuWhenMenuHas3EntriesThanPrintTheirNamesInTreeStyle() {
+        Menu menu = new Menu();
+        Action actionOne = new Item("actionOne");
+        Action actionTwo = new Item("actionTwo");
+        Action actionThree = new Item("actionThree");
+
+        menu.add(null, "1", actionOne);
+        menu.add("1", "2", actionTwo);
+        menu.add("2", "3", actionThree);
+        StringBuilder sb = new StringBuilder();
+        sb.append("actionOne 1").append(System.lineSeparator())
+                .append("---actionTwo 2").append(System.lineSeparator())
+                .append("------actionThree 3").append(System.lineSeparator());
+        assertEquals(menu.printMenu(), sb.toString());
     }
 }

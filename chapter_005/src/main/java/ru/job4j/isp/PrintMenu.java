@@ -10,7 +10,9 @@ package ru.job4j.isp;
  */
 public interface PrintMenu {
     /**
-     * Prints menu.
+     * Returns menu entries in tree style.
+     *
+     * @return String menu.
      */
-    void printMenu();
+    String printMenu();
 }

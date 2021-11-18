@@ -120,4 +120,50 @@ public class TreeNodeTest {
         n11.add(n12);
         assertThat(root.findNode("1.2", root), is(n12));
     }
+
+    /**
+     * Test print() when TreeNode has only one node than print its name.
+     */
+    @Test
+    public void testPrintWhenTreeNodeHasOneNodeThanPrintThatNodeItemNameAndNodeName() {
+//        root.add(n1);
+//        root.add(n2);
+//        n1.add(n11);
+//        n1.add(n12);
+//        n2.add(n21);
+//        n2.add(n22);
+//        n2.add(n23);
+//        n2.add(n24);
+//        root.print();
+//        root.add(n1);
+//        n1.add(n2);
+//        n2.add(n11);
+//        n11.add(n12);
+//        System.out.println("====================");
+        String expected = "Task0 0" + System.lineSeparator();
+        assertEquals(root.print().toString(), expected);
+    }
+
+    @Test
+    public void testPrintWhenTreeNodeHasMultipleNodesThanPrintThatNodeInTreeStyle() {
+        root.add(n1);
+        root.add(n2);
+        n1.add(n11);
+        n1.add(n12);
+        n2.add(n21);
+        n2.add(n22);
+        n2.add(n23);
+        n2.add(n24);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Task0 0").append(System.lineSeparator())
+                .append("---Task1 1").append(System.lineSeparator())
+                .append("------Task11 1.1").append(System.lineSeparator())
+                .append("------Task12 1.2").append(System.lineSeparator())
+                .append("---Task2 2").append(System.lineSeparator())
+                .append("------Task21 2.1").append(System.lineSeparator())
+                .append("------Task22 2.2").append(System.lineSeparator())
+                .append("------Task23 2.3").append(System.lineSeparator())
+                .append("------Task24 2.4").append(System.lineSeparator());
+        assertEquals(root.print().toString(), sb.toString());
+    }
 }

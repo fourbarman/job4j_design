@@ -62,12 +62,14 @@ public class Menu implements PrintMenu {
     }
 
     /**
-     * Prints all menu actions.
+     * Returns all menu actions in tree style.
      */
     @Override
-    public void printMenu() {
+    public String printMenu() {
+        StringBuilder result = new StringBuilder();
         for (TreeNode tn : entries) {
-            tn.print();
+            result.append(tn.print());
         }
+        return result.toString();
     }
 }

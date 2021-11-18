@@ -68,22 +68,33 @@ public class TreeNode {
     }
 
     /**
-     * Recursively prints all TreeNodes names.
+     * Recursively traverse TreeNode, appends names to StringBuilder and returns all nodes in tree style.
      * String prefix can be specified if needed to print it on each new line.
      *
-     * @param pref String prefix.
+     * @param pref          String prefix.
+     * @param stringBuilder StringBuilder.
+     * @return StringBuilder tree style TreeNode.
      */
-    private void printNodes(String pref) {
-        System.out.print(pref);
+    private StringBuilder printNodes(StringBuilder stringBuilder, String pref) {
+        stringBuilder.append(pref);
         pref += "---";
-        System.out.println(getItem().getActionName() + " " + name);
+        stringBuilder.append(getItem().getActionName())
+                .append(" ")
+                .append(name)
+                .append(System.lineSeparator());
         for (int i = 0; i < children.size(); i++) {
-            children.get(i).printNodes(pref);
+            children.get(i).printNodes(stringBuilder, pref);
         }
+        return stringBuilder;
     }
 
-    public void print() {
-        this.printNodes("");
+    /**
+     * Returns all nodes in tree style with "---" prefix.
+     *
+     * @return StringBuilder.
+     */
+    public StringBuilder print() {
+        return this.printNodes(new StringBuilder(), "");
     }
 
     public void setParentName(String parentName) {
