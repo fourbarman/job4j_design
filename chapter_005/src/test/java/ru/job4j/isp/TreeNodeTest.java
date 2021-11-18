@@ -126,20 +126,6 @@ public class TreeNodeTest {
      */
     @Test
     public void testPrintWhenTreeNodeHasOneNodeThanPrintThatNodeItemNameAndNodeName() {
-//        root.add(n1);
-//        root.add(n2);
-//        n1.add(n11);
-//        n1.add(n12);
-//        n2.add(n21);
-//        n2.add(n22);
-//        n2.add(n23);
-//        n2.add(n24);
-//        root.print();
-//        root.add(n1);
-//        n1.add(n2);
-//        n2.add(n11);
-//        n11.add(n12);
-//        System.out.println("====================");
         String expected = "Task0 0" + System.lineSeparator();
         assertEquals(root.print().toString(), expected);
     }
